@@ -1,0 +1,1051 @@
+/*
+ * ╔══════════════════════════════════════════════════════════════╗
+ * ║           CGo UI Library — cgo_clr.css                      ║
+ * ║           颜色与配色系统 (Color & Palette System)            ║
+ * ║                                                              ║
+ * ║  版本：1.0.0 · 2026-06                                       ║
+ * ║  作者：Central Go / NaL                                      ║
+ * ║                                                              ║
+ * ║  内容：                                                      ║
+ * ║    1. 全局色彩 Token（亮色 / 暗色主题）                       ║
+ * ║    2. 语义色（成功 / 警告 / 危险 / 信息）                     ║
+ * ║    3. 管理台权限色                                            ║
+ * ║    4. 玻璃态（Glassmorphism）色                               ║
+ * ║    5. 地图专用色（线路图背景、站点描边等）                     ║
+ * ║    6. 北京地铁各线路标志色                                    ║
+ * ║    7. 用户头像预制配色                                        ║
+ * ║    8. 品牌色与系统自适应 Token                                ║
+ * ╚══════════════════════════════════════════════════════════════╝
+ */
+
+/* =====================================================
+   §1  全局色彩 Token — 亮色模式 (Light Mode)
+   ===================================================== */
+:root {
+    /* ── 背景层 ── */
+    --bg-color: #f8f9fa; /* 页面底层背景 */
+    --bg-body: var(--bg-color);
+    --card-bg: #ffffff; /* 卡片 / 表格 / 容器背景 */
+    --panel-bg: #ffffff; /* 面板背景 */
+    --bg-card: var(--card-bg);
+
+    /* ── 文字 ── */
+    --text-main: #00263b; /* 主文字（品牌深蓝黑） */
+    --text-light: #636f75; /* 次要 / 辅助文字 */
+    --text-color: var(--text-main);
+
+    /* ── 边框 / 分割线 ── */
+    --border-color: #dee2e6;
+
+    /* ── 品牌主色 ── */
+    --primary-color: #00263b; /* 深蓝：按钮 / 高亮 / 选中 */
+    --primary-hover: #004060;
+    --btn-text: #ffffff;
+
+    /* ── 导航 ── */
+    --header-bg: #ffffff;
+    --header-height: 60px;
+    --footer-bg: #ffffff;
+
+    /* ── 次级按钮 (灰色系) ── */
+    --btn-info-bg: #e9ecef;
+    --btn-info-text: #495057;
+    --btn-info-hover: #dee2e6;
+
+    /* ── 表格 ── */
+    --table-head-bg: #f1f3f5;
+    --table-head-text: #00263b;
+    --table-row-hover: #f8f9fa;
+    --table-cell-border: #eeeeee;
+
+    /* ── 选项卡 ── */
+    --tab-bg: #f8f9fa;
+    --tab-hover: rgba(0, 0, 0, 0.03);
+
+    /* ── 帮助弹窗 ── */
+    --help-code-bg: #f7f9fa;
+    --filter-tag-bg: #f8f9fa;
+    --filter-toolbar-bg: #eef2f7;
+}
+
+/* =====================================================
+   §1  全局色彩 Token — 暗色模式 (Dark Mode)
+   ===================================================== */
+[data-theme='dark'] {
+    --bg-color: #1a1a1a;
+    --bg-body: var(--bg-color);
+    --card-bg: #1f2020;
+    --panel-bg: #1f2020;
+    --bg-card: var(--card-bg);
+
+    --text-main: #e5e8ea;
+    --text-light: #a0b0b9;
+    --text-color: var(--text-main);
+
+    --border-color: #333333;
+
+    --primary-color: #006098; /* 暗模式下提亮，适配深底 */
+    --primary-hover: #0070b0;
+    --btn-text: #ffffff;
+
+    --header-bg: #1f2020;
+    --footer-bg: #1f2020;
+
+    --btn-info-bg: #373838;
+    --btn-info-text: #e5e8ea;
+    --btn-info-hover: #4a4b4c;
+
+    --table-head-bg: #2c2d2e;
+    --table-head-text: #e5e8ea;
+    --table-row-hover: #2a2b2c;
+    --table-cell-border: #333333;
+
+    --tab-bg: #2c2d2e;
+    --tab-hover: rgba(255, 255, 255, 0.05);
+
+    --help-code-bg: #2a2a2a;
+    --filter-tag-bg: #2c2d2e;
+    --filter-toolbar-bg: #2c2d2e;
+}
+
+/* =====================================================
+   §2  语义色 (Semantic Colors)
+   ===================================================== */
+:root {
+    /* 成功 */
+    --success-color: #34a853;
+    --success-bg: #e6ffed;
+    --success-border: #a8d5b5;
+
+    /* 警告 */
+    --warning-color: #f59e0b;
+    --warning-bg: rgba(255, 243, 205, 0.5);
+    --warning-border: rgba(255, 238, 186, 0.5);
+
+    /* 危险 */
+    --danger-color: #ea4335;
+    --danger-hover: #b3261e;
+    --danger-bg: #fff1f1;
+    --danger-border: #e58f8f;
+
+    /* 信息 */
+    --info-color: #006098;
+    --info-bg: #e8f0fe;
+    --info-border: #b8d0ee;
+
+    /* 对比模式 — 差异 */
+    --diff-bg: #efbdc3;
+    --diff-text: #d93025;
+    /* 对比模式 — 相同 */
+    --same-bg: #e6ffed;
+    --same-text: #137333;
+    /* 选中列 */
+    --selected-bg: #e8f0fe;
+}
+
+[data-theme='dark'] {
+    --success-color: #34a853;
+    --success-bg: #1b3e20;
+    --success-border: #2d5c36;
+
+    --warning-color: #f59e0b;
+    --warning-bg: rgba(100, 75, 0, 0.2);
+    --warning-border: rgba(120, 90, 0, 0.3);
+
+    --danger-color: #ea4335;
+    --danger-hover: #ff5252;
+    --danger-bg: #3b0f0f;
+    --danger-border: #7a2424;
+
+    --info-color: #006098;
+    --info-bg: #1a2a3a;
+    --info-border: #2a4060;
+
+    --diff-bg: #5c1b1b;
+    --diff-text: #ea4335;
+    --same-bg: #1b3e20;
+    --same-text: #34a853;
+    --selected-bg: rgba(66, 133, 244, 0.2);
+}
+
+/* =====================================================
+   §3  管理台权限色 (Admin Permission Colors)
+   ===================================================== */
+:root {
+    --permission-enabled: #16803d;
+    --permission-enabled-soft: #edf8f1;
+    --permission-enabled-border: #badfc8;
+
+    --permission-disabled: #52637a;
+    --permission-disabled-soft: #f0f4f8;
+    --permission-disabled-border: #b9c5d4;
+
+    --permission-hidden: #c62828;
+    --permission-hidden-soft: #fff1f1;
+    --permission-hidden-border: #e58f8f;
+
+    --permission-inherit: #64748b;
+    --permission-inherit-soft: #f2f5f8;
+    --permission-inherit-border: #d2dbe6;
+}
+
+[data-theme='dark'] {
+    --permission-enabled: #81c995;
+    --permission-enabled-soft: #163820;
+    --permission-enabled-border: #245934;
+
+    --permission-disabled: #94a3b8;
+    --permission-disabled-soft: #202936;
+    --permission-disabled-border: #334155;
+
+    --permission-hidden: #ff8a80;
+    --permission-hidden-soft: #3d1414;
+    --permission-hidden-border: #5c1c1c;
+
+    --permission-inherit: #a1b0cb;
+    --permission-inherit-soft: #242d3d;
+    --permission-inherit-border: #37455d;
+}
+
+/* =====================================================
+   §4  玻璃态色 (Glassmorphism)
+   ===================================================== */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: rgba(0, 0, 0, 0.08);
+    --sidebar-width: 220px;
+}
+
+[data-theme='dark'] {
+    --glass-bg: rgba(31, 32, 32, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-shadow: rgba(0, 0, 0, 0.25);
+}
+
+/* =====================================================
+   §5  地图专用色 (Map-specific Colors)
+   ===================================================== */
+:root {
+    --map-bg: #ffffff;
+    --station-stroke: #00263b;
+    --not-open-color: #bdcbd2;
+    --panel-header-bg: #00263b;
+    --panel-header-text: #ffffff;
+    --close-btn-color: rgba(255, 255, 255, 0.6);
+    --capsule-bg: #ffffff;
+    --capsule-text: #333333;
+    --stops-tag-bg: #f0f2f5;
+    --control-bg: #ffffff;
+    --ctrl-btn-bg: #f0f2f5;
+    --ctrl-icon: #333333;
+    --ctrl-hover: #e1e4e8;
+    --divider: #e0e0e0;
+    --list-hover: #f0f2f5;
+    --sta-stroke-width-cn: 2px;
+    --sta-stroke-width-en: 1.75px;
+}
+
+[data-theme='dark'] {
+    --map-bg: #1a1a1a;
+    --station-stroke: #bdcbd2;
+    --not-open-color: #4e4e4e;
+    --panel-header-bg: #373838;
+    --panel-header-text: #e5e8ea;
+    --close-btn-color: #78848b;
+    --capsule-bg: #1f2020;
+    --capsule-text: #78848b;
+    --stops-tag-bg: #78848b;
+    --control-bg: #1f2020;
+    --ctrl-btn-bg: #373838;
+    --ctrl-icon: #78848b;
+    --ctrl-hover: #4f4f4f;
+    --divider: #333333;
+    --list-hover: #373838;
+}
+
+/* =====================================================
+   §6  北京地铁线路标志色 (Beijing Metro Line Colors)
+   ===================================================== */
+
+/* 地铁线路色工具类：可直接写 class="line-bg line-1号线八通线" */
+.line-bg {
+    color: var(--line-color-text-light);
+    display: inline-block;
+}
+
+.line-bg.line-1号线八通线,
+.filter-tag[data-line='1号线八通线'].active {
+    background-color: var(--line-color-1);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-2号线,
+.filter-tag[data-line='2号线'].active {
+    background-color: var(--line-color-2);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-3号线,
+.filter-tag[data-line='3号线'].active {
+    background-color: var(--line-color-3);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-4号线大兴线,
+.filter-tag[data-line='4号线大兴线'].active {
+    background-color: var(--line-color-4);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-5号线,
+.filter-tag[data-line='5号线'].active {
+    background-color: var(--line-color-5);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-6号线,
+.filter-tag[data-line='6号线'].active {
+    background-color: var(--line-color-6);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-7号线,
+.filter-tag[data-line='7号线'].active {
+    background-color: var(--line-color-7);
+    color: var(--line-color-text-dark);
+}
+
+.line-bg.line-8号线,
+.filter-tag[data-line='8号线'].active {
+    background-color: var(--line-color-8);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-9号线,
+.filter-tag[data-line='9号线'].active {
+    background-color: var(--line-color-9);
+    color: var(--line-color-text-dark);
+}
+
+.line-bg.line-10号线,
+.filter-tag[data-line='10号线'].active {
+    background-color: var(--line-color-10);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-11号线,
+.filter-tag[data-line='11号线'].active {
+    background-color: var(--line-color-11);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-12号线,
+.filter-tag[data-line='12号线'].active {
+    background-color: var(--line-color-12);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-13号线,
+.filter-tag[data-line='13号线'].active {
+    background-color: var(--line-color-13);
+    color: var(--line-color-text-dark);
+}
+
+.line-bg.line-14号线,
+.filter-tag[data-line='14号线'].active {
+    background-color: var(--line-color-14);
+    color: var(--line-color-text-dark);
+}
+
+.line-bg.line-15号线,
+.filter-tag[data-line='15号线'].active {
+    background-color: var(--line-color-15);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-16号线,
+.filter-tag[data-line='16号线'].active {
+    background-color: var(--line-color-16);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-17号线,
+.filter-tag[data-line='17号线'].active {
+    background-color: var(--line-color-17);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-18号线,
+.filter-tag[data-line='18号线'].active {
+    background-color: var(--line-color-18);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-19号线,
+.filter-tag[data-line='19号线'].active {
+    background-color: var(--line-color-19);
+    color: var(--line-color-text-dark);
+}
+
+.line-bg.line-22号线,
+.filter-tag[data-line='22号线'].active {
+    background-color: var(--line-color-22);
+    color: var(--line-color-text-dark);
+}
+
+.line-bg.line-28号线,
+.filter-tag[data-line='28号线'].active {
+    background-color: var(--line-color-28);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-亦庄线,
+.filter-tag[data-line='亦庄线'].active {
+    background-color: var(--line-color-24);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-亦庄T1线,
+.filter-tag[data-line='亦庄T1线'].active {
+    background-color: var(--line-color-t1);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-房山线,
+.filter-tag[data-line='房山线'].active {
+    background-color: var(--line-color-25);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-燕房线,
+.filter-tag[data-line='燕房线'].active {
+    background-color: var(--line-color-25w);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-S1线,
+.filter-tag[data-line='S1线'].active {
+    background-color: var(--line-color-26);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-昌平线,
+.filter-tag[data-line='昌平线'].active {
+    background-color: var(--line-color-27);
+    color: var(--line-color-text-dark);
+}
+
+.line-bg.line-西郊线,
+.filter-tag[data-line='西郊线'].active {
+    background-color: var(--line-color-xj);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-首都机场线,
+.filter-tag[data-line='首都机场线'].active {
+    background-color: var(--line-color-cae);
+    color: var(--line-color-text-dark);
+}
+
+.line-bg.line-大兴机场线,
+.filter-tag[data-line='大兴机场线'].active {
+    background-color: var(--line-color-dae);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-市郊S1线,
+.filter-tag[data-line='市郊S1线'].active {
+    background-color: var(--line-color-sub-s1);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-市郊S2线,
+.filter-tag[data-line='市郊S2线'].active {
+    background-color: var(--line-color-sub-s2);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-市郊S5线,
+.filter-tag[data-line='市郊S5线'].active {
+    background-color: var(--line-color-sub-s5);
+    color: var(--line-color-text-light);
+}
+
+.line-bg.line-市郊S6线,
+.filter-tag[data-line='市郊S6线'].active {
+    background-color: var(--line-color-sub-s6);
+    color: var(--line-color-text-light);
+}
+
+/* 通用"全部"标签 */
+.filter-tag[data-line='all'].active {
+    background: var(--primary-color);
+    color: var(--line-color-text-light);
+}
+
+/* ── 线路行内标签 ── */
+.line-tag {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* ── CSS 变量：线路色（双色板设计） ── */
+:root {
+    /* =====================================================
+       1. 官方标志色 (Official Line Colors)
+       ===================================================== */
+    --line-1-official: #c23a30;
+    --line-2-official: #006098;
+    --line-3-official: #e60033;
+    --line-4-official: #008e9c;
+    --line-5-official: #a6217f;
+    --line-6-official: #d29700;
+    --line-7-official: #fac671;
+    --line-8-official: #009b6b;
+    --line-9-official: #8fc31f;
+    --line-10-official: #009bc0;
+    --line-11-official: #ed796b;
+    --line-12-official: #c76b00;
+    --line-13-official: #f9e700;
+    --line-14-official: #d5a7a1;
+    --line-15-official: #6a357d;
+    --line-16-official: #76a32d;
+    --line-17-official: #00a9a9;
+    --line-18-official: #5654a2;
+    --line-19-official: #d6abc1;
+    --line-22-official: #f7c8ce;
+    --line-28-official: #35570b;
+    --line-24-official: #e40077;
+    --line-t1-official: #e6081b;
+    --line-25-official: #e46022;
+    --line-25w-official: #e46022;
+    --line-26-official: #b25921;
+    --line-27-official: #de82b2;
+    --line-xj-official: #e6081b;
+    --line-cae-official: #a29bbb;
+    --line-dae-official: #004ba0;
+    --line-sub-s1-official: #717071;
+    --line-sub-s2-official: #717071;
+    --line-sub-s5-official: #717071;
+    --line-sub-s6-official: #717071;
+
+    --line-text-light-official: #ffffff;
+    --line-text-dark-official: #002538;
+
+    /* =====================================================
+       2. 优化色 (Screen Adaptive Line Colors)
+       注：数值参考自 scmap_original/data_lines.js
+       ===================================================== */
+    --line-1-screen: #c23a30;
+    --line-2-screen: #006098;
+    --line-3-screen: #e60033;
+    --line-4-screen: #008e9c;
+    --line-5-screen: #a6217f;
+    --line-6-screen: #d29700;
+    --line-7-screen: #fac671;
+    --line-8-screen: #009b63;
+    --line-9-screen: #abcd03;
+    --line-10-screen: #00a3c9;
+    --line-11-screen: #ed796b;
+    --line-12-screen: #c76b00;
+    --line-13-screen: #f8de00;
+    --line-14-screen: #d5a7a9;
+    --line-15-screen: #6a357d;
+    --line-16-screen: #6e992a;
+    --line-17-screen: #00adb2;
+    --line-18-screen: #5654a2;
+    --line-19-screen: #d5abce;
+    --line-22-screen: #f7c8ce;
+    --line-28-screen: #35570b;
+    --line-24-screen: #e40077;
+    --line-t1-screen: #d80618;
+    --line-25-screen: #e46022;
+    --line-25w-screen: #e46022;
+    --line-26-screen: #b25921;
+    --line-27-screen: #ee87b4;
+    --line-xj-screen: #d80618;
+    --line-cae-screen: #a29bbb;
+    --line-dae-screen: #004ba0;
+    --line-sub-s1-screen: #d93932;
+    --line-sub-s2-screen: #4080b7;
+    --line-sub-s5-screen: #e98d95;
+    --line-sub-s6-screen: #919a47;
+
+    --line-text-light-screen: #ffffff;
+    --line-text-dark-screen: #00263b;
+
+    /* =====================================================
+       3. 通用映射变量 (默认映射至优化色)
+       ===================================================== */
+    --line-color-1: var(--line-1-screen);
+    --line-color-2: var(--line-2-screen);
+    --line-color-3: var(--line-3-screen);
+    --line-color-4: var(--line-4-screen);
+    --line-color-5: var(--line-5-screen);
+    --line-color-6: var(--line-6-screen);
+    --line-color-7: var(--line-7-screen);
+    --line-color-8: var(--line-8-screen);
+    --line-color-9: var(--line-9-screen);
+    --line-color-10: var(--line-10-screen);
+    --line-color-11: var(--line-11-screen);
+    --line-color-12: var(--line-12-screen);
+    --line-color-13: var(--line-13-screen);
+    --line-color-14: var(--line-14-screen);
+    --line-color-15: var(--line-15-screen);
+    --line-color-16: var(--line-16-screen);
+    --line-color-17: var(--line-17-screen);
+    --line-color-18: var(--line-18-screen);
+    --line-color-19: var(--line-19-screen);
+    --line-color-22: var(--line-22-screen);
+    --line-color-28: var(--line-28-screen);
+    --line-color-24: var(--line-24-screen);
+    --line-color-t1: var(--line-t1-screen);
+    --line-color-25: var(--line-25-screen);
+    --line-color-25w: var(--line-25w-screen);
+    --line-color-26: var(--line-26-screen);
+    --line-color-27: var(--line-27-screen);
+    --line-color-xj: var(--line-xj-screen);
+    --line-color-cae: var(--line-cae-screen);
+    --line-color-dae: var(--line-dae-screen);
+    --line-color-sub-s1: var(--line-sub-s1-screen);
+    --line-color-sub-s2: var(--line-sub-s2-screen);
+    --line-color-sub-s5: var(--line-sub-s5-screen);
+    --line-color-sub-s6: var(--line-sub-s6-screen);
+
+    --line-color-text-light: var(--line-text-light-screen);
+    --line-color-text-dark: var(--line-text-dark-screen);
+}
+
+/* =====================================================
+   4. 色板属性选择器
+   ===================================================== */
+[data-color-palette='official'] {
+    --line-color-1: var(--line-1-official);
+    --line-color-2: var(--line-2-official);
+    --line-color-3: var(--line-3-official);
+    --line-color-4: var(--line-4-official);
+    --line-color-5: var(--line-5-official);
+    --line-color-6: var(--line-6-official);
+    --line-color-7: var(--line-7-official);
+    --line-color-8: var(--line-8-official);
+    --line-color-9: var(--line-9-official);
+    --line-color-10: var(--line-10-official);
+    --line-color-11: var(--line-11-official);
+    --line-color-12: var(--line-12-official);
+    --line-color-13: var(--line-13-official);
+    --line-color-14: var(--line-14-official);
+    --line-color-15: var(--line-15-official);
+    --line-color-16: var(--line-16-official);
+    --line-color-17: var(--line-17-official);
+    --line-color-18: var(--line-18-official);
+    --line-color-19: var(--line-19-official);
+    --line-color-22: var(--line-22-official);
+    --line-color-28: var(--line-28-official);
+    --line-color-24: var(--line-24-official);
+    --line-color-t1: var(--line-t1-official);
+    --line-color-25: var(--line-25-official);
+    --line-color-25w: var(--line-25w-official);
+    --line-color-26: var(--line-26-official);
+    --line-color-27: var(--line-27-official);
+    --line-color-xj: var(--line-xj-official);
+    --line-color-cae: var(--line-cae-official);
+    --line-color-dae: var(--line-dae-official);
+    --line-color-sub-s1: var(--line-sub-s1-official);
+    --line-color-sub-s2: var(--line-sub-s2-official);
+    --line-color-sub-s5: var(--line-sub-s5-official);
+    --line-color-sub-s6: var(--line-sub-s6-official);
+
+    --line-color-text-light: var(--line-text-light-official);
+    --line-color-text-dark: var(--line-text-dark-official);
+}
+
+[data-color-palette='screen'] {
+    --line-color-1: var(--line-1-screen);
+    --line-color-2: var(--line-2-screen);
+    --line-color-3: var(--line-3-screen);
+    --line-color-4: var(--line-4-screen);
+    --line-color-5: var(--line-5-screen);
+    --line-color-6: var(--line-6-screen);
+    --line-color-7: var(--line-7-screen);
+    --line-color-8: var(--line-8-screen);
+    --line-color-9: var(--line-9-screen);
+    --line-color-10: var(--line-10-screen);
+    --line-color-11: var(--line-11-screen);
+    --line-color-12: var(--line-12-screen);
+    --line-color-13: var(--line-13-screen);
+    --line-color-14: var(--line-14-screen);
+    --line-color-15: var(--line-15-screen);
+    --line-color-16: var(--line-16-screen);
+    --line-color-17: var(--line-17-screen);
+    --line-color-18: var(--line-18-screen);
+    --line-color-19: var(--line-19-screen);
+    --line-color-22: var(--line-22-screen);
+    --line-color-28: var(--line-28-screen);
+    --line-color-24: var(--line-24-screen);
+    --line-color-t1: var(--line-t1-screen);
+    --line-color-25: var(--line-25-screen);
+    --line-color-25w: var(--line-25w-screen);
+    --line-color-26: var(--line-26-screen);
+    --line-color-27: var(--line-27-screen);
+    --line-color-xj: var(--line-xj-screen);
+    --line-color-cae: var(--line-cae-screen);
+    --line-color-dae: var(--line-dae-screen);
+    --line-color-sub-s1: var(--line-sub-s1-screen);
+    --line-color-sub-s2: var(--line-sub-s2-screen);
+    --line-color-sub-s5: var(--line-sub-s5-screen);
+    --line-color-sub-s6: var(--line-sub-s6-screen);
+
+    --line-color-text-light: var(--line-text-light-screen);
+    --line-color-text-dark: var(--line-text-dark-screen);
+}
+
+/* =====================================================
+   §7  用户头像预制配色 (Avatar Preset Colors)
+   ===================================================== */
+:root {
+    /* 15色头像旧色板（保留用于后向兼容） */
+    --avatar-color-red: #d93025;
+    --avatar-color-orange: #e46022;
+    --avatar-color-amber: #d29700;
+    --avatar-color-yellow: #e8b800;
+    --avatar-color-lime: #8fc31f;
+    --avatar-color-green: #009655;
+    --avatar-color-teal: #008e9c;
+    --avatar-color-sky: #009bc0;
+    --avatar-color-blue: #006098;
+    --avatar-color-indigo: #3a4db8;
+    --avatar-color-purple: #6a357d;
+    --avatar-color-pink: #de82b2;
+    --avatar-color-brown: #b25921;
+    --avatar-color-gray: #78848b;
+    --avatar-color-dark: #00263b;
+
+    /* 30色头像新色板 (自 cgoauth/app.js) */
+    --avatar-color-0: #ef4444;
+    --avatar-color-1: #f87171;
+    --avatar-color-2: #f97316;
+    --avatar-color-3: #fb923c;
+    --avatar-color-4: #f59e0b;
+    --avatar-color-5: #eab308;
+    --avatar-color-6: #fef08a;
+    --avatar-color-7: #84cc16;
+    --avatar-color-8: #a3e635;
+    --avatar-color-9: #22c55e;
+    --avatar-color-10: #10b981;
+    --avatar-color-11: #059669;
+    --avatar-color-12: #064e3b;
+    --avatar-color-13: #0d9488;
+    --avatar-color-14: #14b8a6;
+    --avatar-color-15: #22d3ee;
+    --avatar-color-16: #38bdf8;
+    --avatar-color-17: #2563eb;
+    --avatar-color-18: #1d4ed8;
+    --avatar-color-19: #1e3a8a;
+    --avatar-color-20: #4f46e5;
+    --avatar-color-21: #6366f1;
+    --avatar-color-22: #8b5cf6;
+    --avatar-color-23: #c084fc;
+    --avatar-color-24: #d946ef;
+    --avatar-color-25: #ec4899;
+    --avatar-color-26: #f472b6;
+    --avatar-color-27: #fda4af;
+    --avatar-color-28: #64748b;
+    --avatar-color-29: #334155;
+}
+
+/* 头像色旧工具类（保留） */
+.avatar-color-red {
+    color: var(--avatar-color-red);
+    fill: var(--avatar-color-red);
+}
+.avatar-color-orange {
+    color: var(--avatar-color-orange);
+    fill: var(--avatar-color-orange);
+}
+.avatar-color-amber {
+    color: var(--avatar-color-amber);
+    fill: var(--avatar-color-amber);
+}
+.avatar-color-yellow {
+    color: var(--avatar-color-yellow);
+    fill: var(--avatar-color-yellow);
+}
+.avatar-color-lime {
+    color: var(--avatar-color-lime);
+    fill: var(--avatar-color-lime);
+}
+.avatar-color-green {
+    color: var(--avatar-color-green);
+    fill: var(--avatar-color-green);
+}
+.avatar-color-teal {
+    color: var(--avatar-color-teal);
+    fill: var(--avatar-color-teal);
+}
+.avatar-color-sky {
+    color: var(--avatar-color-sky);
+    fill: var(--avatar-color-sky);
+}
+.avatar-color-blue {
+    color: var(--avatar-color-blue);
+    fill: var(--avatar-color-blue);
+}
+.avatar-color-indigo {
+    color: var(--avatar-color-indigo);
+    fill: var(--avatar-color-indigo);
+}
+.avatar-color-purple {
+    color: var(--avatar-color-purple);
+    fill: var(--avatar-color-purple);
+}
+.avatar-color-pink {
+    color: var(--avatar-color-pink);
+    fill: var(--avatar-color-pink);
+}
+.avatar-color-brown {
+    color: var(--avatar-color-brown);
+    fill: var(--avatar-color-brown);
+}
+.avatar-color-gray {
+    color: var(--avatar-color-gray);
+    fill: var(--avatar-color-gray);
+}
+.avatar-color-dark {
+    color: var(--avatar-color-dark);
+    fill: var(--avatar-color-dark);
+}
+
+/* 头像色新工具类 */
+.avatar-color-0 {
+    color: var(--avatar-color-0);
+    fill: var(--avatar-color-0);
+}
+.avatar-color-1 {
+    color: var(--avatar-color-1);
+    fill: var(--avatar-color-1);
+}
+.avatar-color-2 {
+    color: var(--avatar-color-2);
+    fill: var(--avatar-color-2);
+}
+.avatar-color-3 {
+    color: var(--avatar-color-3);
+    fill: var(--avatar-color-3);
+}
+.avatar-color-4 {
+    color: var(--avatar-color-4);
+    fill: var(--avatar-color-4);
+}
+.avatar-color-5 {
+    color: var(--avatar-color-5);
+    fill: var(--avatar-color-5);
+}
+.avatar-color-6 {
+    color: var(--avatar-color-6);
+    fill: var(--avatar-color-6);
+}
+.avatar-color-7 {
+    color: var(--avatar-color-7);
+    fill: var(--avatar-color-7);
+}
+.avatar-color-8 {
+    color: var(--avatar-color-8);
+    fill: var(--avatar-color-8);
+}
+.avatar-color-9 {
+    color: var(--avatar-color-9);
+    fill: var(--avatar-color-9);
+}
+.avatar-color-10 {
+    color: var(--avatar-color-10);
+    fill: var(--avatar-color-10);
+}
+.avatar-color-11 {
+    color: var(--avatar-color-11);
+    fill: var(--avatar-color-11);
+}
+.avatar-color-12 {
+    color: var(--avatar-color-12);
+    fill: var(--avatar-color-12);
+}
+.avatar-color-13 {
+    color: var(--avatar-color-13);
+    fill: var(--avatar-color-13);
+}
+.avatar-color-14 {
+    color: var(--avatar-color-14);
+    fill: var(--avatar-color-14);
+}
+.avatar-color-15 {
+    color: var(--avatar-color-15);
+    fill: var(--avatar-color-15);
+}
+.avatar-color-16 {
+    color: var(--avatar-color-16);
+    fill: var(--avatar-color-16);
+}
+.avatar-color-17 {
+    color: var(--avatar-color-17);
+    fill: var(--avatar-color-17);
+}
+.avatar-color-18 {
+    color: var(--avatar-color-18);
+    fill: var(--avatar-color-18);
+}
+.avatar-color-19 {
+    color: var(--avatar-color-19);
+    fill: var(--avatar-color-19);
+}
+.avatar-color-20 {
+    color: var(--avatar-color-20);
+    fill: var(--avatar-color-20);
+}
+.avatar-color-21 {
+    color: var(--avatar-color-21);
+    fill: var(--avatar-color-21);
+}
+.avatar-color-22 {
+    color: var(--avatar-color-22);
+    fill: var(--avatar-color-22);
+}
+.avatar-color-23 {
+    color: var(--avatar-color-23);
+    fill: var(--avatar-color-23);
+}
+.avatar-color-24 {
+    color: var(--avatar-color-24);
+    fill: var(--avatar-color-24);
+}
+.avatar-color-25 {
+    color: var(--avatar-color-25);
+    fill: var(--avatar-color-25);
+}
+.avatar-color-26 {
+    color: var(--avatar-color-26);
+    fill: var(--avatar-color-26);
+}
+.avatar-color-27 {
+    color: var(--avatar-color-27);
+    fill: var(--avatar-color-27);
+}
+.avatar-color-28 {
+    color: var(--avatar-color-28);
+    fill: var(--avatar-color-28);
+}
+.avatar-color-29 {
+    color: var(--avatar-color-29);
+    fill: var(--avatar-color-29);
+}
+
+/* 等级卡片渐变 (用户等级系统) */
+:root {
+    --level-default-gradient: linear-gradient(135deg, #1282b8, #009655);
+    --level-test-gradient: linear-gradient(135deg, #e98913, #f7b52c);
+    --level-prime-gradient: linear-gradient(135deg, #1c1887, #5f1985);
+    --level-admin-gradient: linear-gradient(135deg, #5c1c24, #e5757e);
+}
+
+/* =====================================================
+   §8  品牌色与系统自适应 (Brand Colors & System Adaptive)
+   ===================================================== */
+:root {
+    /* 品牌色变量 */
+    --brand-color-vitool: #ad78eb;
+    --brand-gradient-start-vitool: #8a56dd;
+    --brand-gradient-end-vitool: #af80d2;
+    --brand-gradient-vitool: linear-gradient(
+        to top,
+        var(--brand-gradient-start-vitool),
+        var(--brand-gradient-end-vitool)
+    );
+    --brand-border-vitool: #7549bc;
+
+    --brand-color-wall: #a35490;
+    --brand-gradient-start-wall: #843d79;
+    --brand-gradient-end-wall: #c46ea9;
+    --brand-gradient-wall: linear-gradient(to top, var(--brand-gradient-start-wall), var(--brand-gradient-end-wall));
+    --brand-border-wall: #683060;
+
+    --brand-color-stasign: #8787eb;
+    --brand-gradient-start-stasign: #7146c2;
+    --brand-gradient-end-stasign: #92a6fc;
+    --brand-gradient-stasign: linear-gradient(
+        to top,
+        var(--brand-gradient-start-stasign),
+        var(--brand-gradient-end-stasign)
+    );
+    --brand-border-stasign: #5442ab;
+
+    --brand-color-staline: #66a1c8;
+    --brand-gradient-start-staline: #3a6894;
+    --brand-gradient-end-staline: #84c2db;
+    --brand-gradient-staline: linear-gradient(
+        to top,
+        var(--brand-gradient-start-staline),
+        var(--brand-gradient-end-staline)
+    );
+    --brand-border-staline: #30587d;
+
+    --brand-color-project: #67caae;
+    --brand-gradient-start-project: #43b1a2;
+    --brand-gradient-end-project: #8fdeb2;
+    --brand-gradient-project: linear-gradient(
+        to top,
+        var(--brand-gradient-start-project),
+        var(--brand-gradient-end-project)
+    );
+    --brand-border-project: #399c8f;
+
+    --brand-color-admin: #475569;
+    --brand-gradient-start-admin: #334155;
+    --brand-gradient-end-admin: #64748b;
+    --brand-gradient-admin: linear-gradient(to top, var(--brand-gradient-start-admin), var(--brand-gradient-end-admin));
+    --brand-border-admin: #1e293b;
+
+    /* 品牌渐变自动适配变量 (-appname) */
+    --brand-gradient-start-appname: var(--brand-gradient-start-vitool);
+    --brand-gradient-end-appname: var(--brand-gradient-end-vitool);
+    --brand-gradient-appname: linear-gradient(
+        to top,
+        var(--brand-gradient-start-appname),
+        var(--brand-gradient-end-appname)
+    );
+    --brand-border-appname: var(--brand-border-vitool);
+}
+
+/* 根据 data-app 自动切换品牌渐变 (提高优先级至 html[data-app]) */
+html[data-app='wall'] {
+    --brand-gradient-start-appname: var(--brand-gradient-start-wall);
+    --brand-gradient-end-appname: var(--brand-gradient-end-wall);
+    --brand-border-appname: var(--brand-border-wall);
+}
+
+html[data-app='stasign'] {
+    --brand-gradient-start-appname: var(--brand-gradient-start-stasign);
+    --brand-gradient-end-appname: var(--brand-gradient-end-stasign);
+    --brand-border-appname: var(--brand-border-stasign);
+}
+
+html[data-app='staline'] {
+    --brand-gradient-start-appname: var(--brand-gradient-start-staline);
+    --brand-gradient-end-appname: var(--brand-gradient-end-staline);
+    --brand-border-appname: var(--brand-border-staline);
+}
+
+html[data-app='project'] {
+    --brand-gradient-start-appname: var(--brand-gradient-start-project);
+    --brand-gradient-end-appname: var(--brand-gradient-end-project);
+    --brand-border-appname: var(--brand-border-project);
+}
+
+html[data-app='admin'] {
+    --brand-gradient-start-appname: var(--brand-gradient-start-admin);
+    --brand-gradient-end-appname: var(--brand-gradient-end-admin);
+    --brand-border-appname: var(--brand-border-admin);
+}

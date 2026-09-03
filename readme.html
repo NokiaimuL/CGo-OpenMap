@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" href="./assets/icons/mapicon.png">
+    <!-- CGoUI 核心 JS 模块预编译与最高优先级预加载 -->
+    <link rel="modulepreload" href="core/cgo-ui.js?v=260903.220000">
+    <!-- CGoUI 样式表与组件 -->
+    <link rel="stylesheet" href="css/cgo_clr.css?v=260903.220000">
+    <link rel="stylesheet" href="css/cgo_element.css?v=260903.220000">
+    <link rel="stylesheet" href="css/cgo_ui.css?v=260903.220000">
+    <link rel="stylesheet" href="css/cgo_components.css?v=260903.220000">
+    <script type="module" src="core/cgo-ui.js?v=260903.220000"></script>
+    <title>CGo OpenMap 线路图开放平台 - 功能与开源说明</title>
+    <style>
+        /* Web Components 元素未注册前的占位与防无样式闪烁 */
+        cgo-icon:not(:defined) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            visibility: visible;
+            opacity: 0.6;
+        }
+
+        :root {
+            --bg-color: #f5f7fa;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --card-bg: #ffffff;
+            --accent-color: #007aff;
+            --header-bg: rgba(255, 255, 255, 0.8);
+            --border-color: #e5e5e5;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #000000;
+                --text-primary: #f5f5f7;
+                --text-secondary: #a1a1a6;
+                --card-bg: #1c1c1e;
+                --accent-color: #0a84ff;
+                --header-bg: rgba(28, 28, 30, 0.8);
+                --border-color: #38383a;
+                --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+                --card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            height: auto !important;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto !important;
+            display: block !important;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding-top: 80px;
+            padding-bottom: 40px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: var(--header-bg);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(128, 128, 128, 0.1);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 4px;
+            fill: currentColor;
+        }
+
+        h1.page-title {
+            font-size: 18px;
+            font-weight: 600;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 60%;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro h2 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .intro p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            max-width: 720px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .intro .tagline {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 12px;
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--accent-color);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border-color);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .card li::before {
+            content: "•";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .footer-info {
+            margin-top: 50px;
+            text-align: center;
+            padding: 28px 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .footer-info a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-info a:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: rgba(128, 128, 128, 0.12);
+            border-radius: 6px;
+            font-size: 12px;
+            margin: 0 4px;
+            font-family: monospace;
+        }
+
+        .action-banner {
+            margin-top: 36px;
+            padding: 20px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.08) 0%, rgba(52, 199, 89, 0.08) 100%);
+            border: 1px solid rgba(0, 122, 255, 0.2);
+            text-align: center;
+        }
+
+        .action-banner h4 {
+            font-size: 16px;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .action-banner p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: var(--accent-color);
+            color: #ffffff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            h1.page-title {
+                display: none;
+            }
+
+            .header-content {
+                justify-content: flex-start;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .intro h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body class="scrollable">
+    <header>
+        <div class="header-content">
+            <button class="back-btn" id="backBtn">
+                <cgo-icon name="back" style="width:20px;height:20px;margin-right:4px;"></cgo-icon>
+                返回地图
+            </button>
+            <h1 class="page-title">CGo OpenMap - 功能与开源说明</h1>
+        </div>
+    </header>
+    <div class="container">
+        <div class="intro">
+            <h2>CGo OpenMap 线路图开放平台</h2>
+            <p>轻量、现代化的开源城市轨道交通线路图引擎。本项目为开源基础版，内置北京线网完整参考范例，旨在方便广大开发者与交通爱好者自由定制并制作属于自己城市的轨道交通线路图。</p>
+            <div class="tagline"><cgo-icon name="sparkle" size="14"
+                    style="vertical-align: -2px; margin-right: 4px;"></cgo-icon>开源基础版 · 支持快速移植任意城市</div>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon"><cgo-icon name="map" size="32" color="var(--accent-color)"></cgo-icon></div>
+                <h3>地图基础操作</h3>
+                <ul>
+                    <li><strong>缩放地图</strong>：支持鼠标滚轮、触控板手势、双指捏合或界面缩放按钮</li>
+                    <li><strong>自由平移</strong>：自由拖拽漫游浏览线网，支持边界弹性回弹</li>
+                    <li><strong>深色模式</strong>：内置深色与浅色双重主题，支持跟随系统或手动锁定</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon"><cgo-icon name="route" size="32" color="var(--accent-color)"></cgo-icon></div>
+                <h3>车站信息与换乘</h3>
+                <ul>
+                    <li><strong>详细图卡</strong>：点击车站展示中英文名、所属线路与运营归属单位</li>
+                    <li><strong>站台结构图</strong>：精细化楼梯分布与换乘节点图（持续补充中）</li>
+                    <li><strong>换乘连通</strong>：支持同台换乘、通道换乘及出站虚拟换乘逻辑</li>
+                    <li><strong>时刻表查询</strong>：一键调取首末班车与实时列车运行时刻</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon"><cgo-icon name="search" size="32" color="var(--accent-color)"></cgo-icon></div>
+                <h3>多维智能检索</h3>
+                <ul>
+                    <li><strong>多维匹配</strong>：支持中英文站名、拼音缩写、多音字及历史更名检索</li>
+                    <li><strong>智能聚焦</strong>：点击搜索结果平滑飞跃并居中高亮选中车站</li>
+                    <li><strong>线路徽标</strong>：搜索结果实时呈现线路徽标与换乘标识</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon"><cgo-icon name="location" size="32" color="var(--accent-color)"></cgo-icon></div>
+                <h3>地理位置与导航服务</h3>
+                <ul>
+                    <li><strong>最近车站查找</strong>：基于 GPS 定位自动计算并推荐距离最近的地铁站</li>
+                    <li><strong>一键导航接驳</strong>：支持一键跳转高德地图规划路径及火车站 12306 购票</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon"><cgo-icon name="layer" size="32" color="var(--accent-color)"></cgo-icon></div>
+                <h3>多城市解耦架构</h3>
+                <ul>
+                    <li><strong>引擎与数据分离</strong>：核心渲染引擎与城市业务数据完全解耦</li>
+                    <li><strong>标准化数据目录</strong>：城市数据采用独立配置清单，极简清晰</li>
+                    <li><strong>多城市一键接入</strong>：在城市注册中心注册即可扩展全国各大城市</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon"><cgo-icon name="palette" size="32" color="var(--accent-color)"></cgo-icon></div>
+                <h3>矢量美学与特色徽标</h3>
+                <ul>
+                    <li><strong>纯矢量 SVG 渲染</strong>：全高清矢量绘制，任何缩放比例下均清晰锐利</li>
+                    <li><strong>文化特色徽标</strong>：支持重点地标文化车站（如故宫、天坛等）专属图标</li>
+                    <li><strong>精致版式排版</strong>：站名智能多向对齐与避让，还原轨道交通图设计感</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon"><cgo-icon name="touch" size="32" color="var(--accent-color)"></cgo-icon></div>
+                <h3>轻量原生与 PWA 离线</h3>
+                <ul>
+                    <li><strong>零重型框架依赖</strong>：纯原生 Web 技术驱动，首屏毫秒级加载</li>
+                    <li><strong>PWA 独立运行</strong>：支持桌面与移动设备一键安装至主屏幕全屏运行</li>
+                    <li><strong>离线数据缓存</strong>：Service Worker 自动缓存核心资源，保障弱网可用</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon"><cgo-icon name="external" size="32" color="var(--accent-color)"></cgo-icon></div>
+                <h3>开放开源与生态共建</h3>
+                <ul>
+                    <li><strong>双轨开源架构</strong>：代码采用 GNU AGPLv3，城市数据采用 ODbL 1.0 / CC BY-SA 4.0</li>
+                    <li><strong>城市主理人机制</strong>：合入主库尊享 UI 与文档永久署名，享官方底层引擎升级保障</li>
+                    <li><strong>完备文档与指引</strong>：提供移植手册与贡献指南，支持零基础 AI 辅助制图</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="action-banner">
+            <h4>想要为你所在的城市制作一份线路图并认领城市主理人？</h4>
+            <p>无论你是零基础新手想让 DeepSeek AI 帮你写代码，还是前端开发者自行移植，我们都为你准备了保姆级指南：</p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px;">
+                <a href="./CONTRIBUTING.md" target="_blank" class="action-btn"
+                    style="background: #007aff; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                    <cgo-icon name="user" size="16"></cgo-icon>
+                    <span>查看《社区贡献与主理人指南》</span>
+                </a>
+                <a href="./DEEPSEEK_QUICKSTART.md" target="_blank" class="action-btn"
+                    style="background: #10a37f; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                    <cgo-icon name="code" size="16"></cgo-icon>
+                    <span>查看《DeepSeek 新手开发手册》</span>
+                </a>
+                <a href="./transition.md" target="_blank" class="action-btn"
+                    style="display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                    <cgo-icon name="file" size="16"></cgo-icon>
+                    <span>查看《城市移植实操手册》</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-info">
+            <p><strong>CGo OpenMap - 城市轨道交通线路图开放平台</strong></p>
+            <p>由 Central Go 及其贡献者开源维护 · 基础范例版本基于北京线网构建</p>
+            <p style="margin-top: 6px;">
+                <span class="badge">GNU AGPLv3 / ODbL</span>
+                <span class="badge">Web Components</span>
+                <span class="badge">PWA Ready</span>
+            </p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('backBtn').addEventListener('click', function () {
+            if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+                history.back();
+            } else {
+                window.location.href = './index.html';
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.animation = `fadeIn 0.5s ease forwards ${index * 0.05}s`;
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+{
+  "name": "CGo OpenMap 线路图开放平台",
+  "short_name": "CGo OpenMap",
+  "description": "轻量、现代化的开源城市轨道交通智能交互线路图平台",
+  "id": "./index.html",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./assets/images/screenshot-1.jpg",
+      "sizes": "720x1280",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "首页地图展示"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "最近车站",
+      "short_name": "最近",
+      "url": "./index.html?action=locate",
+      "icons": [
+        {
+          "src": "./assets/icons/location.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "搜索站点",
+      "short_name": "搜索",
+      "url": "./index.html?action=search",
+      "icons": [
+        {
+          "src": "./assets/icons/search.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
