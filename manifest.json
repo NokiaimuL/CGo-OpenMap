@@ -41,10 +41,10 @@
   ],
   "screenshots": [
     {
-      "src": "./assets/images/screenshot-1.jpg",
-      "sizes": "720x1280",
-      "type": "image/jpeg",
-      "form_factor": "narrow",
+      "src": "./assets/images/screenshot-1.png",
+      "sizes": "6000x4500",
+      "type": "image/png",
+      "form_factor": "wide",
       "label": "首页地图展示"
     }
   ],
