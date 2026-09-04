@@ -89,9 +89,9 @@
 
 | 读者场景 | 推荐文档 | 说明 |
 | :--- | :--- | :--- |
-| 初学者入门 | [DEEPSEEK_QUICKSTART.md](./DEEPSEEK_QUICKSTART.md) | 面向零基础用户的开发环境配置与 AI 辅助开发指南 |
+| 初学者入门 | [QUICKSTART.md](./QUICKSTART.md) | 面向零基础用户的开发环境配置与 AI 辅助开发指南 |
 | AI 辅助开发 | [AGENTS.md](./AGENTS.md) | 面向各类 AI Coding Agent 的项目架构、解耦规范与数据标准 |
-| 城市数据移植 | [transition.md](./transition.md) | 城市线网数据结构、站点坐标与线路图例配置说明 |
+| 城市数据移植 | [PORTING.md](./PORTING.md) | 城市线网数据结构、站点坐标与线路图例配置说明 |
 | 社区贡献规范 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 代码贡献流程、城市主理人机制与 PR 自查清单 |
 
 ---
@@ -106,8 +106,8 @@ openmap/
 ├── LICENSE                     # 双轨开源许可协议 (GNU AGPLv3 + ODbL 1.0)
 ├── CONTRIBUTING.md              # 社区贡献指南与主理人规范
 ├── AGENTS.md                   # AI Agent 规范与架构铁律
-├── DEEPSEEK_QUICKSTART.md      # 初学者 AI 辅助开发手册
-├── transition.md               # 城市移植实操指南
+├── QUICKSTART.md               # 初学者快速上手手册
+├── PORTING.md                  # 城市移植实操指南
 ├── README.md                   # 项目主说明文档
 ├── readme.html                 # 应用内说明弹窗
 ├── privacy.html                # 隐私政策说明
@@ -159,7 +159,7 @@ openmap/
    - 准备线路图标或直接复用 `assets/svg/` 中的通用矢量模板。
 4. **本地验证**：启动本地服务器查看渲染效果，调整站名排版避免遮挡。
 
-详细规范与进阶配置（如换乘站设置、分支线路、虚拟换乘等）请参阅 **[城市移植实操手册 (transition.md)](./transition.md)**。
+详细规范与进阶配置（如换乘站设置、分支线路、虚拟换乘等）请参阅 **[城市移植实操手册 (PORTING.md)](./PORTING.md)**。
 
 ---
 

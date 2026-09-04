@@ -39,7 +39,7 @@ CGo OpenMap 核心引擎正在飞速演进（包括未来规划的换乘寻路�
 
 ### 第一步：Fork 并准备数据
 1. Fork 本仓库至你的 GitHub 账号，并克隆到本地；
-2. 仔细阅读 **[城市移植手册 (transition.md)](./transition.md)**；
+2. 仔细阅读 **[城市移植手册 (PORTING.md)](./PORTING.md)**；
 3. 在 `city/` 目录下新建城市文件夹（如 `city/guangzhou/`），配置车站与线路数据。
 
 ### 第二步：登记城市元数据与署名

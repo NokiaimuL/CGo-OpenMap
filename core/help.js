@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <span>贡献指南</span>
                     <span class="btn-arrow"><cgo-icon name="chevron-right" size="12"></cgo-icon></span>
                 </a>
-                <a href="./transition.md" target="_blank" class="help-link-btn" style="flex: 1; min-width: 95px; margin: 0; padding: 7px 6px;">
+                <a href="./PORTING.md" target="_blank" class="help-link-btn" style="flex: 1; min-width: 95px; margin: 0; padding: 7px 6px;">
                     <span>移植手册</span>
                     <span class="btn-arrow"><cgo-icon name="chevron-right" size="12"></cgo-icon></span>
                 </a>

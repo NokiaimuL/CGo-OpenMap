@@ -46,8 +46,8 @@ openmap/
 ├── LICENSE                     # 双轨开源许可协议 (GNU AGPLv3 + ODbL 1.0)
 ├── CONTRIBUTING.md              # 社区贡献与城市主理人指南
 ├── AGENTS.md                   # AI Agent 快速上手指南 (本文件)
-├── DEEPSEEK_QUICKSTART.md      # 面向零基础小白的 DeepSeek 环境与启动手册
-├── transition.md               # 城市移植详细操作指南
+├── QUICKSTART.md               # 初学者 AI 快速上手实操手册
+├── PORTING.md                  # 城市移植详细操作指南
 ├── README.md                   # 开源项目说明主文档
 ├── readme.html                 # 网页版内置说明弹窗页面
 ├── privacy.html                # 隐私政策页面

@@ -119,7 +119,7 @@ DeepSeek Harness（`dsh`）是 DeepSeek 官方开源的智能体框架，能直�
 2. 在会话里，先告诉 Harness 你的项目位置，例如：
    > “请在 `D:\Projects\openmap` 目录下工作”（Windows），或 “请在 `~/Documents/openmap` 目录下工作”（Mac）。
 3. 再让它先了解项目规范，例如对它说：
-   > “请先阅读项目根目录下的 `AGENTS.md` 和 `transition.md`，并严格按其中的规范操作。”
+   > “请先阅读项目根目录下的 `AGENTS.md` 和 `PORTING.md`，并严格按其中的规范操作。”
 4. 之后，直接复制下面的指令模板发给它即可。
 
 ---
@@ -130,7 +130,7 @@ DeepSeek Harness（`dsh`）是 DeepSeek 官方开源的智能体框架，能直�
 > **你发给 DeepSeek 的提示词：**
 > ```text
 > 你好！我想基于本项目为“上海”制作一张地铁线路图。
-> 请阅读 AGENTS.md 和 transition.md 中的规范：
+> 请阅读 AGENTS.md 和 PORTING.md 中的规范：
 > 1. 请在 city/ 目录下帮我创建 city/shanghai/ 目录；
 > 2. 在 city/data.js 的 CITY_REGISTRY 中帮我注册上海的基础信息（画布大小设为 2200x1800，中心点设为 1000, 800）；
 > 3. 帮我生成基础的 data_stations.js 和 data_lines.js 模板；
