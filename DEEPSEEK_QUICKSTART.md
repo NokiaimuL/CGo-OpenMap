@@ -83,7 +83,7 @@ DeepSeek Harness（`dsh`）是 DeepSeek 官方开源的智能体框架，能直�
    - 如果你是在 GitHub 上看到本项目，点击绿色的 **`Code` ➔ `Download ZIP`**，将压缩包解压到你的电脑文件夹中（例如 `D:\Projects\openmap` 或 `~/Documents/openmap`）。
    - 或者使用 Git 命令克隆：
      ```bash
-     git clone https://github.com/your-username/openmap.git
+     git clone https://github.com/NokiaimuL/CGo-OpenMap.git
      ```
 2. 解压后你会看到 `index.html`、`core/`、`city/`、`css/` 等所有文件，**记住这个文件夹的路径**，后面的步骤会用到它。
 

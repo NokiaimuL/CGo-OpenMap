@@ -82,8 +82,8 @@
 
 1. **克隆或下载代码库**
    ```bash
-   git clone https://github.com/your-username/openmap.git
-   cd openmap
+   git clone https://github.com/NokiaimuL/CGo-OpenMap.git
+   cd CGo-OpenMap
    ```
 
 2. **使用任意静态服务器运行**
