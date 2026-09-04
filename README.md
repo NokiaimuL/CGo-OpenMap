@@ -1,201 +1,187 @@
-# 🚇 CGo OpenMap - 城市轨道交通线路图开放平台
-
-<p align="center">
-  <strong>一款轻量、现代、高度可扩展的开源 Web 城市轨道交通交互线路图引擎</strong>
-</p>
-
 <p align="center">
   <img src="./assets/icons/mapicon.png" alt="CGo OpenMap Logo" width="96" height="96">
 </p>
 
+<h1 align="center">CGo OpenMap</h1>
+
 <p align="center">
-  <a href="#-项目介绍">项目介绍</a> •
-  <a href="#-核心特性">核心特性</a> •
-  <a href="#-快速上手与开发指引">快速上手与开发指引</a> •
-  <a href="#-项目架构">项目架构</a> •
-  <a href="#-如何移植其他城市">移植其他城市</a> •
-  <a href="#-致谢与贡献">致谢与贡献</a>
+  轻量、现代、高度可扩展的开源 Web 城市轨道交通交互线路图引擎
+</p>
+
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0%20%2F%20ODbL-blue.svg" alt="License"></a>
+  <img src="https://img.shields.io/badge/dependencies-none-brightgreen.svg" alt="Zero Dependencies">
+  <a href="./CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+  <img src="https://img.shields.io/badge/platform-Web%20%2F%20PWA-orange.svg" alt="Platform">
+</p>
+
+<p align="center">
+  <a href="#项目简介">项目简介</a> •
+  <a href="#核心特性">核心特性</a> •
+  <a href="#快速上手">快速上手</a> •
+  <a href="#开发文档">开发文档</a> •
+  <a href="#项目架构">项目架构</a> •
+  <a href="#城市数据移植">城市移植</a> •
+  <a href="#城市主理人与鸣谢">主理人与鸣谢</a> •
+  <a href="#开源许可协议">开源协议</a>
+</p>
+
+<p align="center">
+  <img src="./assets/images/screenshot-1.png" alt="CGo OpenMap 界面预览" width="85%">
 </p>
 
 ---
 
-## 📖 项目介绍
+## 项目简介
 
-<p align="center">
-  <img src="./assets/images/screenshot-1.png" alt="CGo OpenMap 界面预览" width="80%">
-</p>
+**CGo OpenMap** 是一款专注于城市轨道交通线网可视化与交互的开源地图引擎。
 
-**CGo OpenMap** 是一个专注于城市轨道交通线网可视化与智能交互的**开源基础版地图引擎**。
+项目采用原生 Web 技术栈构建，具备**开箱即用、轻量高效、零构建依赖**的特点，旨在为交通爱好者、城市规划研究者以及前端开发者提供可定制的交互式线路图解决方案。
 
-本项目旨在为广大交通迷、城市规划爱好者与前端开发者提供一套**开箱即用、轻量高效、零框架依赖**的交互式线路图解决方案。目前默认以“北京轨道交通线网”作为完整参考范例，并已构建完善的**多城市解耦架构**与标准化数据规范，方便网友和开发者快速构建并部署任意城市（如上海、广州、深圳、成都、武汉、南京、杭州等）的地铁线路图版本。
+目前引擎以北京轨道交通线网作为完整参考实现，底层采用通用引擎与城市业务数据完全解耦的架构设计。开发者可以基于标准化数据格式，快速移植并部署任意城市（如上海、广州、深圳、成都、武汉等）的轨道交通网络。
 
 ---
 
-## ✨ 核心特性
+## 核心特性
 
-- 🚀 **极速轻量与零框架依赖**
-  - 基于纯原生 Web 技术栈（HTML5 + SVG + Vanilla JS + Web Components + CSS3）开发。
-  - 无需庞大的前端打包框架，首屏秒级直出，体积轻巧且运行流畅。
-- 🗺️ **流畅自如的地图交互**
-  - 支持多级平滑缩放（滚轮/触控板/手势/按钮控制）、自由拖拽漫游与智能边界回弹。
-  - 内置深色模式（Dark Mode）与浅色模式，支持随系统自动切换或手动锁定。
-- 🔍 **多维智能车站检索**
-  - 支持中文站名、英文名称、拼音首字母、多音字及历史更名别名的即时模糊匹配。
-  - 点击检索结果即刻平滑飞跃并高亮居中车站。
-- 🚉 **精细化站点与线路模型**
-  - **车站图卡**：支持展示换乘线路、车站中英文、运营单位、出入口与接驳信息。
-  - **站台结构图**：支持查看精细化站台换乘与楼梯分布结构示意。
-  - **首末班车时刻**：集成时刻表查询接口，支持官方/外部时刻快速对接。
-  - **出站虚拟换乘**：完整支持同站名不同站厅、出站限时虚拟换乘等复杂逻辑。
-- 📍 **LBS 定位与导航辅助**
-  - 基于浏览器地理位置 API 快速计算周边最近地铁站与直线距离。
-  - 一键调起高德地图导航或主要火车站 12306 购票链接。
-- 🎨 **矢量美学与文化徽标**
-  - 纯矢量 SVG 线路平滑渲染，自适应高分屏。
-  - 支持重点历史文化车站（故宫、天坛、颐和园等）专属特色徽标展示。
-- 🏙️ **模块化多城市架构**
-  - 核心引擎逻辑（`core/`）与城市业务数据（`city/`）彻底解耦。
-  - 采用标准化配置清单，制作新城市只需填充对应的数据文件，无需重写底层渲染逻辑。
-- 📱 **PWA 渐进式应用支持**
-  - 完善的 Service Worker 离线缓存与 Web App Manifest 配置。
-  - 支持在 Windows / macOS / iOS / Android 上作为独立 App “安装”至桌面全屏运行。
+- **轻量与零框架依赖**：纯原生 Web 标准构建（HTML5、SVG、Vanilla JS、Web Components、CSS 变量），无需 Node.js、Webpack 或其它前端打包流程，直接以静态资源方式部署运行。
+- **原生矢量图形交互**：基于原生 SVG 渲染，支持无级平滑缩放、自由平移漫游与视口边界控制，原生适配桌面端鼠标滚轮及移动端多触点缩放手势。
+- **深浅色主题适配**：内置深色（Dark）与浅色（Light）两套主题，支持跟随系统色彩偏好自动切换或手动锁定；高分屏下文字与矢量元素均保真呈现。
+- **多维车站检索**：支持站名中英文、拼音全拼与首字母简拼、多音字及历史站名别名模糊匹配；检索命中后支持视口平滑定位与聚焦动效。
+- **精细化站点与线路模型**：提供车站信息图卡（换乘线路、运营归属、出入口信息）、站台换乘与楼梯结构示意图、首末班车时刻表查询接口以及出站限时虚拟换乘映射。
+- **位置辅助与服务联动**：基于浏览器 Geolocation API 计算临近站点与直线距离，支持一键调起外部地图导航与铁路枢纽服务。
+- **高内聚低耦合的多城市架构**：核心渲染引擎（`core/`）与城市业务配置（`city/`）彻底分离，新增城市仅需配置站点与走向数据，无需修改底层渲染逻辑。
+- **PWA 离线支持**：内置 Service Worker 缓存策略与 Web App Manifest 配置，支持在主流桌面与移动操作系统上作为独立应用安装并离线使用。
 
 ---
 
-## 🚀 快速上手与开发指引
-
-### 📚 开发文档导航
-
-无论你是零基础新手、资深前端开发者，还是正在使用 AI Agent 协作，我们都为你准备了针对性的文档：
-
-| 读者对象 | 推荐阅读文档 | 说明 |
-|---|---|---|
-| 👶 **零基础新手小白** | 🚀 **[新手小白实战手册 (DEEPSEEK_QUICKSTART.md)](./DEEPSEEK_QUICKSTART.md)** | 手把手教你安装 VS Code、配置免费的 DeepSeek AI 插件，用大白话指挥 AI 帮你画地铁图 |
-| 🤖 **AI Coding Agent** | 🤖 **[AI Agent 快速上手指南 (AGENTS.md)](./AGENTS.md)** | 面向各类 AI Agent（DeepSeek / Antigravity / Cursor / Claude 等）的项目架构、解耦规范与数据标准 |
-| 🛠️ **城市移植开发者** | 🛠️ **[城市移植实操手册 (transition.md)](./transition.md)** | 从零配置上海、广州、深圳等新城市车站、线路、图例与时刻表的全流程步骤 |
-
----
+## 快速上手
 
 ### 本地运行
 
-由于项目使用了原生 ES Modules 和 Service Worker，建议使用静态本地服务器运行：
+由于项目使用了 ES Modules 与 Service Worker，需通过 HTTP/HTTPS 协议访问，建议使用任意静态 HTTP 服务器运行：
 
-1. **克隆或下载代码库**
+1. **克隆代码库**
    ```bash
    git clone https://github.com/NokiaimuL/CGo-OpenMap.git
    cd CGo-OpenMap
    ```
 
-2. **使用任意静态服务器运行**
-   - **VS Code（最推荐）**：安装 `Live Server` 插件，在 VS Code 右下角点击 **Go Live**（或右键 `index.html` 选择 **Open with Live Server**）。
-   - **Node.js (npx)**：
+2. **启动本地服务（任选一种）**
+   - **VS Code**：安装 `Live Server` 插件，在编辑器右下角点击 **Go Live**（或右键 `index.html` 选择 **Open with Live Server**）。
+   - **Node.js**：
      ```bash
      npx serve .
      ```
-   - **Python**：
+   - **Python 3**：
      ```bash
-     # Python 3
      python3 -m http.server 8080
      ```
 
-3. 打开浏览器访问 `http://localhost:8080`（或 `http://127.0.0.1:5500`）即可开始体验。
+3. **访问应用**
+   在浏览器中打开 `http://localhost:8080`（或 Live Server 对应端口如 `http://127.0.0.1:5500`）即可查看。
 
 ---
 
-## 📂 项目架构
+## 开发文档
+
+针对不同角色与使用场景，项目提供了详细的开发与配置指南：
+
+| 读者场景 | 推荐文档 | 说明 |
+| :--- | :--- | :--- |
+| 初学者入门 | [DEEPSEEK_QUICKSTART.md](./DEEPSEEK_QUICKSTART.md) | 面向零基础用户的开发环境配置与 AI 辅助开发指南 |
+| AI 辅助开发 | [AGENTS.md](./AGENTS.md) | 面向各类 AI Coding Agent 的项目架构、解耦规范与数据标准 |
+| 城市数据移植 | [transition.md](./transition.md) | 城市线网数据结构、站点坐标与线路图例配置说明 |
+| 社区贡献规范 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 代码贡献流程、城市主理人机制与 PR 自查清单 |
+
+---
+
+## 项目架构
+
+项目目录采用引擎与数据分层设计：
 
 ```text
 openmap/
-├── index.html                  # 主入口页面
+├── index.html                  # 应用主入口页面
 ├── LICENSE                     # 双轨开源许可协议 (GNU AGPLv3 + ODbL 1.0)
-├── CONTRIBUTING.md              # 社区贡献与城市主理人指南
-├── AGENTS.md                   # AI Agent 快速上手指南 (架构规范/解耦铁律)
-├── DEEPSEEK_QUICKSTART.md      # 面向零基础小白的 DeepSeek 环境与启动手册
-├── transition.md               # 城市移植新手实操手册
-├── README.md                   # 项目开源说明主文档
-├── readme.html                 # 网页版内置说明弹窗页面
+├── CONTRIBUTING.md              # 社区贡献指南与主理人规范
+├── AGENTS.md                   # AI Agent 规范与架构铁律
+├── DEEPSEEK_QUICKSTART.md      # 初学者 AI 辅助开发手册
+├── transition.md               # 城市移植实操指南
+├── README.md                   # 项目主说明文档
+├── readme.html                 # 应用内说明弹窗
 ├── privacy.html                # 隐私政策说明
-├── manifest.json               # PWA 应用配置文件
-├── sw.js                       # 离线缓存 Service Worker
-├── core/                       # 核心引擎层 (多城市通用)
-│   ├── cgo-ui.js               # CGoUI Web Components 基础组件库
-│   ├── script.js               # 地图主渲染引擎、坐标转换、手势与交互逻辑
-│   ├── settings.js             # 偏好设置面板逻辑
+├── manifest.json               # PWA 配置文件
+├── sw.js                       # Service Worker 离线缓存
+├── core/                       # 核心通用引擎 (多城市通用)
+│   ├── script.js               # 主渲染引擎：SVG 绘制、视口变换与交互调度
+│   ├── cgo-ui.js               # Web Components 组件库 (<cgo-icon> 等)
+│   ├── settings.js             # 设置面板控制逻辑
 │   ├── help.js                 # 帮助与关于弹窗逻辑
-│   ├── notice.js               # 动态通知与公告系统
-│   └── tool-theme.js           # 主题切换与颜色调度
-├── city/                       # 城市数据与业务配置层 (按城市解耦)
-│   ├── data.js                 # 城市注册总线与元数据中心
-│   └── beijing/                # 示例城市：北京
-│       ├── beijing.js          # 北京特有业务关系与接口
-│       ├── data_stations.js    # 车站坐标、站名、对齐与属性
-│       ├── data_lines.js       # 线路序列、颜色、站距与运营信息
-│       ├── data_legend.js      # 图例结构与分组展示数据
+│   ├── notice.js               # 消息通知组件
+│   └── tool-theme.js           # 主题切换与调色管理
+├── city/                       # 城市数据层 (按城市解耦)
+│   ├── data.js                 # 城市注册总线 (CITY_REGISTRY)
+│   └── beijing/                # 参考实现 (北京)
+│       ├── beijing.js          # 城市特定业务逻辑与扩展
+│       ├── data_stations.js    # 车站坐标、名称、属性与对齐配置
+│       ├── data_lines.js       # 线路走向、站点序列与标志色
+│       ├── data_legend.js      # 图例结构与分组展示
 │       ├── data_timetable.js   # 车站首末班车时刻数据
-│       ├── data_notopen.js     # 在建及暂未开通线路数据
+│       ├── data_notopen.js     # 在建及未开通规划走向
 │       ├── data_scattered.js   # 孤立/特殊连接线路段
-│       ├── data_virtual_transfers.js # 虚拟换乘与出站连通定义
-│       ├── staname.csv         # 拼音检索与更名索引库
+│       ├── data_virtual_transfers.js # 虚拟换乘映射定义
+│       ├── staname.csv         # 拼音检索与多音字库
 │       └── stacard/            # 车站详情卡片与结构图组件
-├── css/                        # 样式表
-│   ├── style.css               # 地图核心样式
-│   ├── cgo_ui.css              # CGoUI 基础样式
-│   ├── cgo_clr.css             # 线路标志色与主题配色变量
+├── css/                        # 样式系统
+│   ├── style.css               # 地图引擎核心样式与图层布局
+│   ├── cgo_clr.css             # 线路标志色与全局主题变量
 │   ├── cgo_element.css         # UI 基础元素样式
-│   └── cgo_components.css      # 车站卡片与检索面板组件样式
-└── assets/                     # 资源文件
-    ├── icons/                  # 站点、应用与系统图标
-    ├── svg/                    # 线路徽标 SVG
-    └── images/                 # 预览与截图
+│   ├── cgo_ui.css              # CGoUI 基础样式
+│   └── cgo_components.css      # 车站卡片与检索面板样式
+└── assets/                     # 静态资源
+    ├── icons/                  # 应用与车站图标
+    ├── svg/                    # 线路数字矢量徽标
+    └── images/                 # 界面截图与演示资源
 ```
 
 ---
 
-## 🛠️ 如何移植其他城市？
+## 城市数据移植
 
-制作你所在城市的地铁线路图非常简单，你只需：
+制作新城市线路图包含以下核心步骤：
 
-1. **复制模板**：在 `city/` 目录下新建城市文件夹（例如 `city/shanghai/`）。
-2. **注册城市**：在 `city/data.js` 中注册你的城市 ID、画布中心点与尺寸等基础配置。
-3. **编排数据**：
-   - 填充 `data_stations.js`（车站坐标、名称、换乘属性）。
-   - 填充 `data_lines.js`（线路走向、站点串联顺序、线路标志色）。
-   - 准备对应的线路 SVG 图标放入 `assets/svg/`。
-4. **刷新预览**：在浏览器中即刻查看渲染出的新城市地铁线路图！
+1. **新建城市目录**：在 `city/` 目录下建立对应城市文件夹（例如 `city/shanghai/`），参考 `city/beijing/` 的数据文件结构。
+2. **注册城市信息**：在 `city/data.js` 的 `CITY_REGISTRY` 中添加城市元数据（ID、画布尺寸、默认中心点与初始缩放比例）。
+3. **录入站点与线路**：
+   - 在 `data_stations.js` 中录入车站唯一 ID、画布坐标 `(x, y)`、中英文名称及文本对齐方式；
+   - 在 `data_lines.js` 中配置线路序列、站点串联顺序 `stationIds` 与线路标志色；
+   - 准备线路图标或直接复用 `assets/svg/` 中的通用矢量模板。
+4. **本地验证**：启动本地服务器查看渲染效果，调整站名排版避免遮挡。
 
-👉 **详细的保姆级教程请阅读：[城市移植手册 (transition.md)](./transition.md)**
+详细规范与进阶配置（如换乘站设置、分支线路、虚拟换乘等）请参阅 **[城市移植实操手册 (transition.md)](./transition.md)**。
 
 ---
 
-## 🌟 城市主理人计划与鸣谢 (City Maintainers)
+## 城市主理人与鸣谢
 
-本项目倡导**开放共建、共同主理**。凡是完整移植或主要维护某座城市数据的开发者，均自动成为该城市的官方主理人，并在 UI、文档及数据注册表中永久保留署名与主页链接：
+本项目倡导**开放共建、各城自主主理**的运作模式。完整移植或长期维护特定城市数据的贡献者将作为该城市的官方主理人，其署名与个人主页链接将展示在应用界面（「关于与帮助」弹窗）、项目文档及数据注册表中。
 
 - **北京线网**：[NaL](https://github.com/NokiaimuL/)（城市主理人） · SierraQin（运营数据支持） · Freedom Space（市郊铁路校对）
 - **上海线网**：*主理人虚位以待，欢迎认领*
-- **平台架构**：[NaL](https://github.com/NokiaimuL/) & [Ryan](https://github.com/ryan-si)（网页底层技术架构支持）
-- **地理数据**：[高德地图开放平台](https://lbs.amap.com/)（地理编码与经纬度支持）
+- **平台架构**：[NaL](https://github.com/NokiaimuL/) & [Ryan](https://github.com/ryan-si)
+- **地理数据**：[高德地图开放平台](https://lbs.amap.com/)
 
-> 📢 想要认领你所在城市的线路图并成为官方城市主理人？请阅读 **[社区贡献指南 (CONTRIBUTING.md)](./CONTRIBUTING.md)**。
-
----
-
-## 🛡️ 版本升级与兼容性保障承诺
-
-CGo OpenMap 引擎底层正处于快速迭代演进中（包括未来支持的换乘路径算法、时刻表联动、3D/实际走向模式联动与图形渲染性能大重构）：
-
-- **✅ 合入官方主库的城市**：官方核心团队承诺提供**终身向后兼容支持、自动化数据格式迁移工具与全量功能测试**，确保你的城市始终享受最新引擎特性与持续 Bug 修复；
-- **❌ 私自保留的独立分支**：由于脱离官方生态，未来底层引擎演进时私有格式将迅速失配，需自行承担极高昂的代码重构与维护成本。
-
-欢迎所有移植新城市的开发者积极向官方仓库提交 Pull Request，共同壮大开源线路图生态！
+> **关于上游维护与兼容性**：
+> 核心引擎将持续迭代演进（如寻路算法、时刻表联动、3D/实际走向视图等）。建议将新增城市数据通过 Pull Request 合入官方主库，官方团队将统一提供向后兼容支持与数据迁移维护。
+> 欢迎查阅 **[社区贡献指南 (CONTRIBUTING.md)](./CONTRIBUTING.md)** 了解更多提交流程。
 
 ---
 
-## 📄 双轨开源许可协议 (Dual-License)
+## 开源许可协议
 
-本项目采用代码引擎与城市业务数据分离的**双轨开源协议**架构（详见 [LICENSE](./LICENSE)）：
+本项目采用核心引擎与城市数据分离的**双轨开源协议**（详见 [LICENSE](./LICENSE)）：
 
-1. **核心引擎与交互代码 (`core/`, `css/`, `index.html` 等)**：基于 **[GNU AGPLv3](./LICENSE)** 开源。任何在网络服务器上运行并向公众提供交互式在线地图服务的修改版本，均必须向访问用户公开完整源代码。
-2. **城市地图与业务数据层 (`city/` 目录)**：基于 **[ODbL 1.0 (Open Database License)](https://opendatacommons.org/licenses/odbl/)** 与 **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)** 相同方式共享协议开源。任何基于本项目数据衍生或扩充的新城市线网数据库一旦公开，必须保持同等协议开源共享；主仓库依法享有将公开衍生数据合并收编的权利。
-3. **知识产权说明**：各城市轨道交通系统的官方标志、线路名称、官方标志色及运营数据版权归各属地轨道交通运营公司所有。
-
+1. **核心引擎与交互代码**（`core/`、`css/`、`index.html` 等）：遵循 **[GNU AGPLv3](./LICENSE)** 协议开源。任何基于网络服务器向公众提供在线地图交互服务的衍生版本，均须向用户公开完整源代码。
+2. **城市地图与业务数据**（`city/` 目录）：遵循 **[ODbL 1.0 (Open Database License)](https://opendatacommons.org/licenses/odbl/)** 与 **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)** 协议共享。任何基于本项目数据衍生的公开线网数据，须保持同等协议开源。
+3. **知识产权说明**：各城市轨道交通系统的官方标志、线路名称、官方标志色及运营数据版权归各属地运营公司所有。
