@@ -14,6 +14,30 @@
     z-index: 31;
 }
 
+/* 呼出线由城市脚本按标签实际尺寸动态绘制。外描边隔离底图，内线跟随主题文字色。 */
+#lines-layer #shenyang-label-callout-lines {
+    pointer-events: none;
+    overflow: visible;
+}
+
+#lines-layer .shenyang-label-callout-line-halo,
+#lines-layer .shenyang-label-callout-line {
+    fill: none;
+    stroke-linecap: round;
+    pointer-events: none;
+    vector-effect: non-scaling-stroke;
+}
+
+#lines-layer .shenyang-label-callout-line-halo {
+    stroke: var(--map-bg);
+    stroke-width: 4px;
+}
+
+#lines-layer .shenyang-label-callout-line {
+    stroke: var(--text-main);
+    stroke-width: 1.2px;
+}
+
 /* 详情弹窗标题中的沈阳城市专属站点图标。 */
 .shenyang-station-header-decoration {
     flex: 0 0 32px;
