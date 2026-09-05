@@ -63,6 +63,25 @@
                 { name: "待认领", role: "城市主理人招募中", isRecruiting: true }
             ],
             isDefault: false
+        },
+        "shenyang": {
+            id: "shenyang",
+            name: "沈阳",
+            folder: "./city/shenyang",
+            mainLogic: "./city/shenyang/shenyang.js",
+            center: { x: 1000, y: 1170 },
+            defaultScale: 1.0,
+            mapSize: { width: 2000, height: 2400 },
+            searchCity: "沈阳",
+            title: "CGo OpenMap - 沈阳地铁线网图",
+            keywords: "CGo OpenMap, 沈阳地铁, 线路图, 轨道交通",
+            description: "由 CGo OpenMap 驱动的沈阳轨道交通智能交互线路图",
+            officialMapUrl: "https://symtc.com/metro/passenger?menuInfo=IqrtbiWGPusZw4wCih3m2YRNiXJIYT1pjX2pF0/XX30lu1%2BGtOMiaCjsVIw9ivHVzeD8jpj3GuOHd8UqVujd33oHmcuPVsisY9MZemovzQQ=",
+            maintainers: [
+                { name: "jrzhang", role: "城市主理人", github: "https://github.com/beepingflijo" },
+                { name: "从恒隆到细河", role: "运营数据支持" }
+            ],
+            isDefault: false
         }
     };
 
