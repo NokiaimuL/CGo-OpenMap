@@ -83,6 +83,10 @@ const ASSETS_TO_CACHE = [
     './city/shenyang/data_timetable.js',
     './city/shenyang/amap_data.json',
     './city/shenyang/staname.csv',
+    './city/shenyang/style.css',
+    './city/shenyang/assets/airport.svg',
+    './city/shenyang/assets/fangcheng.svg',
+    './city/shenyang/assets/railway.svg',
 
     // 图标与清单素材
     './assets/icons/icon-192.png',

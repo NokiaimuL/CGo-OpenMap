@@ -1,0 +1,25 @@
+/* CGo OpenMap - 沈阳城市专属样式 */
+
+/* 深色主题下提高沈阳黑色装饰线与地图背景的对比度。 */
+[data-theme="dark"] #scattered-layer img[src$="/backslash.svg"],
+[data-theme="dark"] #scattered-layer img[src$="/slash.svg"],
+[data-theme="dark"] #scattered-layer img[src$="/underline_90.svg"] {
+    filter: invert(1);
+}
+
+/* 换乘站呼出标签：用底边框替代需要反复旋转定位的图片资源。 */
+.label-group.label-callout {
+    padding: 2px 4px 1px;
+    border-bottom: 1.2px solid var(--text-main);
+    z-index: 31;
+}
+
+/* 详情弹窗标题中的沈阳城市专属站点图标。 */
+.shenyang-station-header-decoration {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    object-fit: contain;
+    display: block;
+}

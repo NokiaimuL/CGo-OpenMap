@@ -5,19 +5,92 @@
  */
 
 (function () {
+    const CITY_STYLE_ID = "shenyang-city-style";
+
+    function loadCityStylesheet() {
+        if (document.getElementById(CITY_STYLE_ID)) return;
+        const link = document.createElement("link");
+        link.id = CITY_STYLE_ID;
+        link.rel = "stylesheet";
+        link.href = "./city/shenyang/style.css";
+        document.head.appendChild(link);
+    }
+
+    loadCityStylesheet();
+
+    const HEADER_DECORATION_CLASS = "shenyang-station-header-decoration";
+    const FANGCHENG_DECORATION = {
+        src: "./city/shenyang/assets/fangcheng.svg",
+        title: "本站位于沈阳方城文化旅游区"
+    };
+    const STATION_HEADER_DECORATIONS = {
+        "怀远门": FANGCHENG_DECORATION,
+        "中街": FANGCHENG_DECORATION,
+        "大南门": FANGCHENG_DECORATION
+    };
+
+    function syncStationHeaderDecoration(infoPanel) {
+        const existingImage = infoPanel.querySelector(`.${HEADER_DECORATION_CLASS}`);
+        const stationName = infoPanel.querySelector(".panel-cn-name")?.textContent?.trim() || "";
+        const decoration = STATION_HEADER_DECORATIONS[stationName];
+
+        if (!decoration) {
+            existingImage?.remove();
+            return;
+        }
+        if (existingImage) {
+            existingImage.src = decoration.src;
+            existingImage.title = decoration.title || "";
+            return;
+        }
+
+        const headerNameGroup = infoPanel.querySelector(".header-name-group");
+        if (!headerNameGroup?.parentElement) return;
+
+        const decorationImg = document.createElement("img");
+        decorationImg.className = HEADER_DECORATION_CLASS;
+        decorationImg.src = decoration.src;
+        decorationImg.title = decoration.title || "";
+        decorationImg.alt = "";
+        decorationImg.setAttribute("aria-hidden", "true");
+        decorationImg.draggable = false;
+        headerNameGroup.parentElement.insertBefore(decorationImg, headerNameGroup);
+    }
+
+    function installStationHeaderDecorationObserver() {
+        const infoPanel = document.getElementById("info-panel");
+        if (!infoPanel || infoPanel.dataset.shenyangHeaderDecorationObserver === "true") return;
+
+        const observer = new MutationObserver(() => syncStationHeaderDecoration(infoPanel));
+        observer.observe(infoPanel, { childList: true, subtree: true });
+        infoPanel.dataset.shenyangHeaderDecorationObserver = "true";
+        syncStationHeaderDecoration(infoPanel);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", installStationHeaderDecorationObserver, { once: true });
+    } else {
+        installStationHeaderDecorationObserver();
+    }
+
     const ShenyangCity = {
         id: "shenyang",
         name: "沈阳",
         searchCity: "沈阳",
-        center: { x: 1000, y: 1170 },
+        center: { x: 1000, y: 800 },
         defaultScale: 1.0,
-        mapSize: { width: 2000, height: 2400 },
+        mapSize: { width: 1944, height: 1680 },
         LINE_META: {},
         LINE_SORT_ORDER: [],
         LINE_SYNC_GROUPS: [],
         SUBURBAN_LINES: [],
         MERGE_STATIONS: [],
         CROSS_PLATFORM_STATIONS: [],
+        // 换乘站默认使用底部描边与下角引线，合作街保留原有普通标签样式。
+        getStationLabelStyle(station) {
+            if (station?.type !== "tsf" || station.cn === "合作街") return null;
+            return "callout";
+        },
         maintainers: [
             { name: "jrzhang", role: "城市主理人", github: "https://github.com/beepingflijo" },
             { name: "从恒隆到细河", role: "运营数据支持" }
