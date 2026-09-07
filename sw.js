@@ -17,7 +17,7 @@
  * ==============================================================================
  */
 
-const CACHE_NAME = 'cgo-openmap-v260903.220000';
+const CACHE_NAME = 'cgo-openmap-v260904.010000';
 const ASSETS_TO_CACHE = [
     // 页面与入口
     './',
@@ -70,6 +70,23 @@ const ASSETS_TO_CACHE = [
     './city/shanghai/data_urls.js',
     './city/shanghai/amap_data.json',
     './city/shanghai/staname.csv',
+
+    // 城市配置与业务数据 (沈阳)
+    './city/shenyang/shenyang.js',
+    './city/shenyang/stacard/script.js',
+    './city/shenyang/data_stations.js',
+    './city/shenyang/data_lines.js',
+    './city/shenyang/data_virtual_transfers.js',
+    './city/shenyang/data_scattered.js',
+    './city/shenyang/data_notopen.js',
+    './city/shenyang/data_legend.js',
+    './city/shenyang/data_timetable.js',
+    './city/shenyang/amap_data.json',
+    './city/shenyang/staname.csv',
+    './city/shenyang/style.css',
+    './city/shenyang/assets/airport.svg',
+    './city/shenyang/assets/fangcheng.svg',
+    './city/shenyang/assets/railway.svg',
 
     // 图标与清单素材
     './assets/icons/icon-192.png',
