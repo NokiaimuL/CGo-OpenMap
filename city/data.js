@@ -14,9 +14,11 @@
  * ==============================================================================
  * 当你需要为新城市（如上海、广州、深圳、成都、武汉等）制作线路图时：
  * 1. 在 `city/` 目录下创建以城市拼音/英文命名的新文件夹（例如 `city/shanghai/`）；
- * 2. 在下方 `CITY_REGISTRY` 对象中添加一条新城市配置记录（参考下面的上海示例注释）；
+ * 2. 在下方 `CITY_REGISTRY` 对象中添加一条新城市配置记录（包含 id, name, center, mapSize, registerDate, maintainers 等）；
  * 3. 在 `city/{city_id}/` 下编写对应的业务与数据文件（参考 `city/beijing/` 规范）；
- * 4. 在 `index.html` 底部引入新城市脚本，或通过 `?city={city_id}` 动态访问。
+ * 4. 在 `main.html` 底部引入新城市脚本，或通过 `main.html?city={city_id}` 动态访问；
+ * 5. 在 `manifest.json` 的 `shortcuts` 数组中添加该城市的快捷直达方式；
+ * 6. 在 `sw.js` 中将新城市文件加入预缓存列表，并递增 `CACHE_NAME` 版本号。
  * ==============================================================================
  */
 
@@ -37,10 +39,12 @@
             searchCity: "北京",
             title: "CGo OpenMap - 北京轨道交通线路图",
             keywords: "CGo OpenMap, 北京地铁, 线路图, 市郊铁路, 轨道交通",
-            description: "由 CGo OpenMap 驱动的北京轨道交通智能交互线路图",
+            description: "由 CGo OpenMap 驱动的北京轨道交通智能交互线路图，全面覆盖北京地铁与市郊铁路线网。",
             officialMapUrl: "https://www.bjsubway.com/station/xltcx/",
+            registerDate: "2026-09-03",
+            status: "active",
             maintainers: [
-                { name: "NaL", role: "城市主理人" },
+                { name: "NaL", role: "城市主理人", github: "https://github.com/NokiaimuL" },
                 { name: "SierraQin", role: "运营数据支持" },
                 { name: "Freedom Space", role: "市郊铁路校对" }
             ],
@@ -57,10 +61,12 @@
             searchCity: "上海",
             title: "CGo OpenMap - 上海轨道交通线路图",
             keywords: "CGo OpenMap, 上海地铁, 申通地铁, 线路图, 轨道交通",
-            description: "由 CGo OpenMap 驱动的上海轨道交通智能交互线路图",
+            description: "由 CGo OpenMap 驱动的上海轨道交通智能交互线路图，主理人虚位以待，欢迎共建！",
             officialMapUrl: "http://service.shmetro.com/yxxp/index.htm",
+            registerDate: "2026-09-04",
+            status: "recruiting",
             maintainers: [
-                { name: "待认领", role: "城市主理人招募中", isRecruiting: true }
+                { name: "待认领", role: "城市主理人招募中", isRecruiting: true, github: "https://github.com/NokiaimuL/CGo-OpenMap/blob/main/CONTRIBUTING.md" }
             ],
             isDefault: false
         },
@@ -75,8 +81,10 @@
             searchCity: "沈阳",
             title: "CGo OpenMap - 沈阳地铁线网图",
             keywords: "CGo OpenMap, 沈阳地铁, 线路图, 轨道交通",
-            description: "由 CGo OpenMap 驱动的沈阳轨道交通智能交互线路图",
+            description: "由 CGo OpenMap 驱动的沈阳轨道交通智能交互线路图，包含沈阳地铁1~4、9、10号线及方城文化地标。",
             officialMapUrl: "https://symtc.com/metro/passenger?menuInfo=IqrtbiWGPusZw4wCih3m2YRNiXJIYT1pjX2pF0/XX30lu1%2BGtOMiaCjsVIw9ivHVzeD8jpj3GuOHd8UqVujd33oHmcuPVsisY9MZemovzQQ=",
+            registerDate: "2026-09-05",
+            status: "active",
             maintainers: [
                 { name: "jrzhang", role: "城市主理人", github: "https://github.com/beepingflijo" },
                 { name: "从恒隆到细河", role: "运营数据支持" }

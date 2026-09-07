@@ -64,6 +64,25 @@ const CITY_REGISTRY = {
 };
 ```
 
+> [!TIP]
+> **同步配置 PWA 应用快捷直达方式 (`manifest.json`)**：
+> 完成城市基础信息注册后，请在项目根目录的 `manifest.json` 中，将新城市加入到 `shortcuts` 数组中。这样安装为 PWA 应用的用户即可在桌面端右键图标或在移动设备上长按应用图标，直接唤起新城市的线路图：
+> ```json
+> {
+>   "name": "上海轨道交通",
+>   "short_name": "上海",
+>   "description": "查看上海轨道交通线网图",
+>   "url": "./main.html?city=shanghai",
+>   "icons": [
+>     {
+>       "src": "./assets/icons/icon-192.png",
+>       "sizes": "192x192",
+>       "type": "image/png"
+>     }
+>   ]
+> }
+> ```
+
 ---
 
 ## 🎨 第二步：准备线路徽标 (`assets/svg/`)
@@ -186,9 +205,9 @@ const VIRTUAL_FREE_TRANSFER_MAP = {
 
 ---
 
-## 🚀 第五步：在 `index.html` 中引入城市数据脚本
+## 🚀 第五步：在 `main.html` 中引入城市数据脚本
 
-在 `index.html` 的底部脚本加载区，将城市相关数据脚本指向你的新城市目录（例如 `shanghai`）：
+在 `main.html` 的底部脚本加载区，系统已配置动态按需加载，亦可直接通过 `main.html?city={city_id}` 动态访问。若需要硬编码调试，可将相关数据脚本指向你的新城市目录（例如 `shanghai`）：
 
 ```html
 <!-- 城市业务逻辑与数据配置 -->
@@ -223,6 +242,7 @@ const VIRTUAL_FREE_TRANSFER_MAP = {
 - [ ] **搜索测试**：在搜索栏中输入中文、英文或拼音缩写，能否准确定位车站？
 - [ ] **图例联动**：点击图例中的线路，是否能正常高亮对应线路？
 - [ ] **定位功能**：在移动端或浏览器中点击定位按钮，能否正确计算出最近的车站？
+- [ ] **PWA Shortcuts**：已在 `manifest.json` 的 `shortcuts` 列表中登记新城市快捷直达入口？
 - [ ] **Service Worker 缓存**：已在 `sw.js` 中将新城市文件加入预缓存列表，并已更新 `CACHE_NAME` 版本号（避免更改不生效）？
 
 ---

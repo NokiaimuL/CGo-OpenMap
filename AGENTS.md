@@ -47,7 +47,8 @@
 
 ```text
 openmap/
-├── index.html                  # 主入口页面 (包含基础DOM与脚本引入区)
+├── index.html                  # 欢迎首页门户 (展示标题欢迎、已注册城市动态排序、主理人名录与导航)
+├── main.html                   # 线路图核心交互画布 (包含基础DOM、SVG生成与多城市业务脚本加载)
 ├── LICENSE                     # 双轨开源许可协议 (GNU AGPLv3 + ODbL 1.0)
 ├── CONTRIBUTING.md              # 社区贡献与城市主理人指南
 ├── AGENTS.md                   # AI Agent 快速上手指南 (本文件)
@@ -194,8 +195,10 @@ const linesData = [
 1. **创建城市目录**：在 `city/` 下新建 `city/{city_id}/`，参考 `city/beijing/` 或 `city/shenyang/` 准备各个 `data_*.js` 文件。
 2. **注册城市**：在 `city/data.js` 的 `CITY_REGISTRY` 中添加新城市元数据。
 3. **编写车站与线路**：按顺序填充 `data_stations.js` 和 `data_lines.js`。
-4. **引入脚本**：在 `index.html` 底部修改引入的城市脚本路径，或保留动态加载支持。
-5. **验证测试**：启动静态服务验证渲染与缩放。
+4. **引入脚本**：在 `main.html` 底部修改引入的城市脚本路径，或保留动态加载支持（通过 `main.html?city={city_id}` 动态访问）。
+5. **添加 PWA 快捷方式**：在 `manifest.json` 的 `shortcuts` 中登记该城市快捷入口（`url: "./main.html?city={city_id}"`）。
+6. **更新离线缓存**：在 `sw.js` 的 `ASSETS_TO_CACHE` 中登记新城市资源并递增 `CACHE_NAME` 版本号。
+7. **验证测试**：启动静态服务验证首页展示、卡片跳转及地图渲染与缩放。
 
 ### 任务 B：批量添加/修改站点与调整线路
 1. **添加站点**：在 `data_stations.js` 添加车站对象，设置合理的 `(x, y)` 坐标与 `align` 对齐方式。
@@ -216,7 +219,7 @@ const linesData = [
 
 ## 6. 本地运行与调试方法
 
-由于浏览器安全策略（CORS）限制，直接双击 `index.html` 无法通过 `file://` 协议加载模块与数据。请使用以下任一方式启动本地静态服务：
+由于浏览器安全策略（CORS）限制，直接双击 `index.html` 或 `main.html` 无法通过 `file://` 协议加载模块与数据。请使用以下任一方式启动本地静态服务：
 
 ```bash
 # 方式 1: 使用 npx serve (推荐)

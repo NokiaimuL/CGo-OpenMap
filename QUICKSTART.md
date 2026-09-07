@@ -85,13 +85,13 @@ DeepSeek Harness（`dsh`）是 DeepSeek 官方开源的智能体框架，能直�
      ```bash
      git clone https://github.com/NokiaimuL/CGo-OpenMap.git
      ```
-2. 解压后你会看到 `index.html`、`core/`、`city/`、`css/` 等所有文件，**记住这个文件夹的路径**，后面的步骤会用到它。
+2. 解压后你会看到 `index.html`（欢迎首页门户）、`main.html`（线路图交互画布）、`core/`、`city/`、`css/` 等所有文件，**记住这个文件夹的路径**，后面的步骤会用到它。
 
 ---
 
 ## 第五步：一键启动本地预览（看到地图）
 
-⚠️ **新手最容易踩的坑**：*为什么直接在电脑文件夹里双击 `index.html` 打开是白屏或图标不显示？*  
+⚠️ **新手最容易踩的坑**：*为什么直接在电脑文件夹里双击 `index.html` 或 `main.html` 打开是白屏或图标不显示？*  
 - **原因**：现代浏览器出于安全策略，禁止直接通过本地文件协议（`file://`）加载模块化脚本与 SVG 资源。必须通过本地 HTTP 服务器运行！
 
 ### 启动方法：
@@ -106,7 +106,7 @@ DeepSeek Harness（`dsh`）是 DeepSeek 官方开源的智能体框架，能直�
    npx serve .
    ```
 3. 终端会打印一个本地地址（例如 `http://localhost:3000`），用浏览器打开它。
-4. 🎉 此时你就能看到丝滑流畅的轨道交通线路图啦！默认展示北京线网，也可以在右上角「设置」面板中切换城市（或在浏览器地址栏添加 `?city=shenyang` 直接访问沈阳地铁线网），试着用鼠标滚轮缩放、拖拽、搜索车站。
+4. 🎉 此时你就能看到欢迎首页门户，展示所有入驻城市及负责人信息！点击任意城市卡片（或直接访问 `http://localhost:3000/main.html?city=shenyang`），就能看到丝滑流畅的轨道交通线路图，试着用鼠标滚轮缩放、拖拽、搜索车站。
 
 ---
 
@@ -134,7 +134,7 @@ DeepSeek Harness（`dsh`）是 DeepSeek 官方开源的智能体框架，能直�
 > 1. 请在 city/ 目录下帮我创建 city/shanghai/ 目录；
 > 2. 在 city/data.js 的 CITY_REGISTRY 中帮我注册上海的基础信息（画布大小设为 2200x1800，中心点设为 1000, 800）；
 > 3. 帮我生成基础的 data_stations.js 和 data_lines.js 模板；
-> 4. 告诉我如何在 index.html 底部切换引入上海的脚本。
+> 4. 告诉我如何在 main.html 底部切换引入上海的脚本（或通过 main.html?city=shanghai 访问）。
 > ```
 
 ---

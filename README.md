@@ -68,7 +68,7 @@
    ```
 
 2. **启动本地服务（任选一种）**
-   - **VS Code**：安装 `Live Server` 插件，在编辑器右下角点击 **Go Live**（或右键 `index.html` 选择 **Open with Live Server**）。
+   - **VS Code**：安装 `Live Server` 插件，在编辑器右下角点击 **Go Live**（或右键 `index.html` / `main.html` 选择 **Open with Live Server**）。
    - **Node.js**：
      ```bash
      npx serve .
@@ -106,7 +106,8 @@
 
 ```text
 openmap/
-├── index.html                  # 应用主入口页面
+├── index.html                  # 欢迎首页门户 (城市列表动态排序与主理人名录)
+├── main.html                   # 线路图核心交互画布 (SVG渲染引擎与业务层)
 ├── LICENSE                     # 双轨开源许可协议 (GNU AGPLv3 + ODbL 1.0)
 ├── CONTRIBUTING.md              # 社区贡献指南与主理人规范
 ├── AGENTS.md                   # AI Agent 规范与架构铁律
@@ -173,8 +174,10 @@ openmap/
    - 在 `data_stations.js` 中录入车站唯一 ID、画布坐标 `(x, y)`、中英文名称及文本对齐方式；
    - 在 `data_lines.js` 中配置线路序列、站点串联顺序 `stationIds` 与线路标志色；
    - 准备线路图标或直接复用 `assets/svg/` 中的通用矢量模板。
-4. **更新离线缓存**：在 `sw.js` 中将新城市文件登记至 `ASSETS_TO_CACHE`，并递增 `CACHE_NAME` 版本号。**一定要更新 Service Worker，否则更改可能不会生效；若出现怎么修改都不起作用的情况，请优先排查 Service Worker 缓存。**
-5. **本地验证**：启动本地服务器查看渲染效果，调整站名排版避免遮挡。
+4. **配置快捷方式与离线缓存**：
+   - 在 `manifest.json` 的 `shortcuts` 中登记新城市快捷入口（`url: "./main.html?city={city_id}"`）；
+   - 在 `sw.js` 中将新城市文件登记至 `ASSETS_TO_CACHE`，并递增 `CACHE_NAME` 版本号。**一定要更新 Service Worker，否则更改可能不会生效；若出现怎么修改都不起作用的情况，请优先排查 Service Worker 缓存。**
+5. **本地验证**：启动本地服务器查看首页城市卡片与地图渲染效果，调整站名排版避免遮挡。
 
 详细规范与进阶配置（如换乘站设置、分支线路、虚拟换乘等）请参阅 **[城市移植实操手册 (PORTING.md)](./PORTING.md)**。
 
@@ -200,6 +203,6 @@ openmap/
 
 本项目采用核心引擎与城市数据分离的**双轨开源协议**（详见 [LICENSE](./LICENSE)）：
 
-1. **核心引擎与交互代码**（`core/`、`css/`、`index.html` 等）：遵循 **[GNU AGPLv3](./LICENSE)** 协议开源。任何基于网络服务器向公众提供在线地图交互服务的衍生版本，均须向用户公开完整源代码。
+1. **核心引擎与交互代码**（`core/`、`css/`、`index.html`、`main.html` 等）：遵循 **[GNU AGPLv3](./LICENSE)** 协议开源。任何基于网络服务器向公众提供在线地图交互服务的衍生版本，均须向用户公开完整源代码。
 2. **城市地图与业务数据**（`city/` 目录）：遵循 **[ODbL 1.0 (Open Database License)](https://opendatacommons.org/licenses/odbl/)** 与 **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)** 协议共享。任何基于本项目数据衍生的公开线网数据，须保持同等协议开源。
 3. **知识产权说明**：各城市轨道交通系统的官方标志、线路名称、官方标志色及运营数据版权归各属地运营公司所有。
