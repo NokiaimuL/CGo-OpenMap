@@ -90,6 +90,26 @@
                 { name: "从恒隆到细河", role: "运营数据支持" }
             ],
             isDefault: false
+        },
+        "hefei": {
+            id: "hefei",
+            name: "合肥",
+            folder: "./city/hefei",
+            mainLogic: "./city/hefei/hefei.js",
+            center: { x: 1200, y: 1400 },
+            defaultScale: 0.75,
+            mapSize: { width: 2400, height: 3000 },
+            searchCity: "合肥",
+            title: "CGo OpenMap - 合肥轨道交通线路图",
+            keywords: "CGo OpenMap, 合肥地铁, 合肥轨道交通, 线路图",
+            description: "由 CGo OpenMap 驱动的合肥轨道交通智能交互线路图，覆盖 1–8 号线及 S1 线示意。",
+            officialMapUrl: "https://www.hfgdjt.com/",
+            registerDate: "2026-09-07",
+            status: "active",
+            maintainers: [
+                { name: "Evin", role: "城市主理人", github: "https://github.com/walternie" }
+            ],
+            isDefault: false
         }
     };
 

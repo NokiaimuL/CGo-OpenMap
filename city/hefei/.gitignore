@@ -1,0 +1,5 @@
+# Local layout helpers — not part of the city data package
+layout_anchors.json
+_generate_from_anchors.py
+_generate_mvp.py
+26map.png
