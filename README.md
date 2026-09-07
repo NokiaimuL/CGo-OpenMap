@@ -189,6 +189,7 @@ openmap/
 
 - **北京线网**：[NaL](https://github.com/NokiaimuL/)（城市主理人） · SierraQin（运营数据支持） · Freedom Space（市郊铁路校对）
 - **沈阳线网**：[jrzhang](https://github.com/beepingflijo)（城市主理人） · 从恒隆到细河（运营数据支持）
+- **合肥线网**：[Evin](https://github.com/walternie)（城市主理人）
 - **上海线网**：*主理人虚位以待，欢迎认领*
 - **平台架构**：[NaL](https://github.com/NokiaimuL/) & [Ryan](https://github.com/ryan-si)
 - **地理数据**：[高德地图开放平台](https://lbs.amap.com/)

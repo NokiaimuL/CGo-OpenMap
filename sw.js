@@ -18,7 +18,7 @@
  * ==============================================================================
  */
 
-const CACHE_NAME = 'cgo-openmap-v260907.151300';
+const CACHE_NAME = 'cgo-openmap-v260907.221200';
 const ASSETS_TO_CACHE = [
     // 页面与入口
     './',
