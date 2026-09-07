@@ -38,7 +38,7 @@
 
 项目采用原生 Web 技术栈构建，具备**开箱即用、轻量高效、零构建依赖**的特点，旨在为交通爱好者、城市规划研究者以及前端开发者提供可定制的交互式线路图解决方案。
 
-目前引擎以北京轨道交通线网作为完整参考实现，底层采用通用引擎与城市业务数据完全解耦的架构设计。开发者可以基于标准化数据格式，快速移植并部署任意城市（如上海、广州、深圳、成都、武汉等）的轨道交通网络。
+目前引擎内置北京轨道交通与沈阳地铁线网作为完整实现与参考范例，底层采用通用引擎与城市业务数据完全解耦的架构设计。开发者可以基于标准化数据格式，快速移植并部署任意城市（如上海、广州、深圳、成都、武汉等）的轨道交通网络。
 
 ---
 
@@ -81,6 +81,10 @@
 3. **访问应用**
    在浏览器中打开 `http://localhost:8080`（或 Live Server 对应端口如 `http://127.0.0.1:5500`）即可查看。
 
+> [!TIP]
+> **开发与调试提示（Service Worker 强缓存）**：
+> 本项目启用了原生 Service Worker 离线强缓存机制。修改代码或城市数据后，**务必同步更新 `sw.js` 中的 `CACHE_NAME` 缓存版本号**，否则更改可能不会生效。如果在调试时遇到**“怎么修改都不起作用、刷新无变化”**的情况，请优先排查是否是 Service Worker 缓存所致，可在浏览器 DevTools（F12）Network 面板中勾选 `Disable cache`，或执行硬性强制刷新（`Ctrl + F5` / `Cmd + Shift + R`）。
+
 ---
 
 ## 开发文档
@@ -122,17 +126,29 @@ openmap/
 │   └── tool-theme.js           # 主题切换与调色管理
 ├── city/                       # 城市数据层 (按城市解耦)
 │   ├── data.js                 # 城市注册总线 (CITY_REGISTRY)
-│   └── beijing/                # 参考实现 (北京)
-│       ├── beijing.js          # 城市特定业务逻辑与扩展
-│       ├── data_stations.js    # 车站坐标、名称、属性与对齐配置
-│       ├── data_lines.js       # 线路走向、站点序列与标志色
+│   ├── beijing/                # 参考实现 (北京)
+│   │   ├── beijing.js          # 城市特定业务逻辑与扩展
+│   │   ├── data_stations.js    # 车站坐标、名称、属性与对齐配置
+│   │   ├── data_lines.js       # 线路走向、站点序列与标志色
+│   │   ├── data_legend.js      # 图例结构与分组展示
+│   │   ├── data_timetable.js   # 车站首末班车时刻数据
+│   │   ├── data_notopen.js     # 在建及未开通规划走向
+│   │   ├── data_scattered.js   # 孤立/特殊连接线路段
+│   │   ├── data_virtual_transfers.js # 虚拟换乘映射定义
+│   │   ├── staname.csv         # 拼音检索与多音字库
+│   │   └── stacard/            # 车站详情卡片与结构图组件
+│   └── shenyang/               # 社区贡献实现 (沈阳)
+│       ├── shenyang.js         # 城市特定业务逻辑 (换乘站呼出线/方城文化地标等)
+│       ├── style.css           # 城市专属样式表
+│       ├── data_stations.js    # 车站数据 (1~4、9、10号线等)
+│       ├── data_lines.js       # 线路走向与站间距配置
 │       ├── data_legend.js      # 图例结构与分组展示
-│       ├── data_timetable.js   # 车站首末班车时刻数据
-│       ├── data_notopen.js     # 在建及未开通规划走向
-│       ├── data_scattered.js   # 孤立/特殊连接线路段
-│       ├── data_virtual_transfers.js # 虚拟换乘映射定义
-│       ├── staname.csv         # 拼音检索与多音字库
-│       └── stacard/            # 车站详情卡片与结构图组件
+│       ├── data_timetable.js   # 首末班车时刻数据
+│       ├── data_notopen.js     # 在建线路规划走向
+│       ├── data_scattered.js   # 枢纽与地标装饰配置
+│       ├── data_virtual_transfers.js # 虚拟换乘映射
+│       ├── staname.csv         # 拼音检索与历史站名索引
+│       └── stacard/            # 车站详情卡片组件
 ├── css/                        # 样式系统
 │   ├── style.css               # 地图引擎核心样式与图层布局
 │   ├── cgo_clr.css             # 线路标志色与全局主题变量
@@ -151,13 +167,14 @@ openmap/
 
 制作新城市线路图包含以下核心步骤：
 
-1. **新建城市目录**：在 `city/` 目录下建立对应城市文件夹（例如 `city/shanghai/`），参考 `city/beijing/` 的数据文件结构。
+1. **新建城市目录**：在 `city/` 目录下建立对应城市文件夹（例如 `city/shanghai/`），参考 `city/beijing/` 或 `city/shenyang/` 的数据文件结构。
 2. **注册城市信息**：在 `city/data.js` 的 `CITY_REGISTRY` 中添加城市元数据（ID、画布尺寸、默认中心点与初始缩放比例）。
 3. **录入站点与线路**：
    - 在 `data_stations.js` 中录入车站唯一 ID、画布坐标 `(x, y)`、中英文名称及文本对齐方式；
    - 在 `data_lines.js` 中配置线路序列、站点串联顺序 `stationIds` 与线路标志色；
    - 准备线路图标或直接复用 `assets/svg/` 中的通用矢量模板。
-4. **本地验证**：启动本地服务器查看渲染效果，调整站名排版避免遮挡。
+4. **更新离线缓存**：在 `sw.js` 中将新城市文件登记至 `ASSETS_TO_CACHE`，并递增 `CACHE_NAME` 版本号。**一定要更新 Service Worker，否则更改可能不会生效；若出现怎么修改都不起作用的情况，请优先排查 Service Worker 缓存。**
+5. **本地验证**：启动本地服务器查看渲染效果，调整站名排版避免遮挡。
 
 详细规范与进阶配置（如换乘站设置、分支线路、虚拟换乘等）请参阅 **[城市移植实操手册 (PORTING.md)](./PORTING.md)**。
 
@@ -168,6 +185,7 @@ openmap/
 本项目倡导**开放共建、各城自主主理**的运作模式。完整移植或长期维护特定城市数据的贡献者将作为该城市的官方主理人，其署名与个人主页链接将展示在应用界面（「关于与帮助」弹窗）、项目文档及数据注册表中。
 
 - **北京线网**：[NaL](https://github.com/NokiaimuL/)（城市主理人） · SierraQin（运营数据支持） · Freedom Space（市郊铁路校对）
+- **沈阳线网**：[jrzhang](https://github.com/beepingflijo)（城市主理人） · 从恒隆到细河（运营数据支持）
 - **上海线网**：*主理人虚位以待，欢迎认领*
 - **平台架构**：[NaL](https://github.com/NokiaimuL/) & [Ryan](https://github.com/ryan-si)
 - **地理数据**：[高德地图开放平台](https://lbs.amap.com/)

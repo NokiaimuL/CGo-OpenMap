@@ -11,9 +11,10 @@
  * 2. 高德切片网络缓存 (Stale-While-Revalidate / Cache-First for Tiles):
  *    - 拦截所有发往 `autonavi.com` 的地图瓦片请求，保存至 `map-tiles-cache`，加速二次浏览。
  * 
- * 移植指南 (Porting Guide):
- * 当你制作了新城市（如 `shanghai`）并作为发布包时，请在 `ASSETS_TO_CACHE` 中补充该城市的路径：
- * `'./city/shanghai/shanghai.js'`, `'./city/shanghai/data_stations.js'` 等。
+ * 移植与开发维护指南 (Developer & Porting Guide):
+ * 1. 当制作了新城市（如 `shanghai`）或新增静态资源时，请在下方 `ASSETS_TO_CACHE` 中补充对应资源路径；
+ * 2. ⚠️ 务必更新 Service Worker：修改任何业务数据或代码后，必须同步递增 `CACHE_NAME` 版本号，否则更改可能无法生效！
+ *    若在调试开发过程中遇到“怎么修改代码都不起作用、刷新无反应”的情况，请务必优先排查是否是 Service Worker 强缓存导致。
  * ==============================================================================
  */
 

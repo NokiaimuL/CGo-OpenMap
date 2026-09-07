@@ -25,7 +25,7 @@
    - 负责 SVG 绘制、视口缩放漫游、手势处理、全局搜索、图例调度、主题切换、图卡弹窗等通用交互。
    - **严禁**在 `core/` 下的任何脚本中硬编码特定城市的车站 ID（如 `M101`）、特定线路名称（如 `1号线`）、特定颜色或特定城市的私有业务逻辑。
 2. **`city/` 目录为城市业务数据层**：
-   - 所有特定城市（如北京 `city/beijing/`、上海 `city/shanghai/` 等）的车站坐标、线路走向、站距、图例结构、时刻表，**必须且只能**存放在 `city/{city_id}/` 目录下。
+   - 所有特定城市（如北京 `city/beijing/`、沈阳 `city/shenyang/`、上海 `city/shanghai/` 等）的车站坐标、线路走向、站距、图例结构、时刻表，**必须且只能**存放在 `city/{city_id}/` 目录下。
    - 所有新城市必须通过 `city/data.js` 的 `CITY_REGISTRY` 进行注册。
 
 ### 🚨 铁律二：零重型依赖与单文件纯粹性
@@ -35,6 +35,11 @@
 ### 🚨 铁律三：严禁破坏暗色/亮色主题与多端适配
 - 所有颜色必须优先使用 `css/cgo_clr.css` 和 `css/style.css` 中定义的 CSS 变量（如 `var(--theme-bg)`, `var(--text-color)` 等）。
 - 任何 UI 变更必须同时适配桌面端（鼠标滚轮、悬浮、拖拽）与移动触控端（多点手势捏合缩放、触控拖拽）。
+
+### 🚨 铁律四：代码或数据修改必须同步更新 Service Worker
+- 本项目基于原生 Service Worker（`sw.js`）实现离线预缓存与性能加速。
+- **任何新增文件、修改车站/线路数据或核心引擎逻辑后，必须同步更新 `sw.js` 中的 `CACHE_NAME` 缓存版本号**（新增文件还须同步登记至 `ASSETS_TO_CACHE` 数组），**否则更改将无法生效**。
+- 💡 **排错第一准则**：在开发与调试过程中，**若出现“无论怎么修改代码/数据，页面表现都毫无变化、怎么改都不起作用”的情况，请务必首先思考是否是 Service Worker 强缓存导致的可能性！**
 
 ---
 
@@ -62,17 +67,23 @@ openmap/
 │   └── tool-theme.js           # 亮暗主题切换控制器
 ├── city/                       # 城市数据层 (按城市解耦)
 │   ├── data.js                 # 城市注册总线 (CITY_REGISTRY) 与运行时元数据
-│   └── beijing/                # 示例城市 (北京)
-│       ├── beijing.js          # 城市特有业务关系
-│       ├── data_stations.js    # 车站坐标、中英文名、对齐方式、类型 (dot/tsf/rdot)
-│       ├── data_lines.js       # 线路序列、颜色、站距、分支/环线配置
-│       ├── data_legend.js      # 图例分组与分类显示
-│       ├── data_timetable.js   # 车站首末班车时刻数据
-│       ├── data_notopen.js     # 在建与规划虚线走向
-│       ├── data_virtual_transfers.js # 出站虚拟换乘/站外连通映射
-│       ├── data_scattered.js   # 孤立/特殊连接线路段
-│       ├── staname.csv         # 拼音缩写、多音字与旧站名搜索库
-│       └── stacard/            # 车站详情卡片与站台结构图组件
+│   ├── beijing/                # 示例城市 (北京)
+│   │   ├── beijing.js          # 城市特有业务关系
+│   │   ├── data_stations.js    # 车站坐标、中英文名、对齐方式、类型 (dot/tsf/rdot)
+│   │   ├── data_lines.js       # 线路序列、颜色、站距、分支/环线配置
+│   │   ├── data_legend.js      # 图例分组与分类显示
+│   │   ├── data_timetable.js   # 车站首末班车时刻数据
+│   │   ├── data_notopen.js     # 在建与规划虚线走向
+│   │   ├── data_virtual_transfers.js # 出站虚拟换乘/站外连通映射
+│   │   ├── data_scattered.js   # 孤立/特殊连接线路段
+│   │   ├── staname.csv         # 拼音缩写、多音字与旧站名搜索库
+│   │   └── stacard/            # 车站详情卡片与站台结构图组件
+│   └── shenyang/               # 示例城市 (沈阳，社区贡献范例)
+│       ├── shenyang.js         # 城市业务逻辑 (换乘站呼出线/方城文化地标等)
+│       ├── style.css           # 城市专属样式表
+│       ├── data_stations.js    # 车站数据 (1~4、9、10号线等)
+│       ├── data_lines.js       # 线路走向与站距配置
+│       └── ...                 # 图例、卡片与检索等全套数据
 ├── css/                        # 样式系统
 │   ├── style.css               # 地图引擎核心样式、图层排版、手势动画
 │   ├── cgo_clr.css             # 线路标志色与全局主题配色变量
@@ -180,7 +191,7 @@ const linesData = [
 ## 5. AI Agent 常见任务执行 SOP
 
 ### 任务 A：为项目移植新城市
-1. **创建城市目录**：在 `city/` 下新建 `city/{city_id}/`，参考 `city/beijing/` 准备各个 `data_*.js` 文件。
+1. **创建城市目录**：在 `city/` 下新建 `city/{city_id}/`，参考 `city/beijing/` 或 `city/shenyang/` 准备各个 `data_*.js` 文件。
 2. **注册城市**：在 `city/data.js` 的 `CITY_REGISTRY` 中添加新城市元数据。
 3. **编写车站与线路**：按顺序填充 `data_stations.js` 和 `data_lines.js`。
 4. **引入脚本**：在 `index.html` 底部修改引入的城市脚本路径，或保留动态加载支持。
@@ -218,3 +229,12 @@ python3 -m http.server 8080
 ```
 
 浏览器访问对应端口（如 `http://localhost:8080` 或 `http://127.0.0.1:5500`）即可实时调试。
+
+### ⚠️ 核心注意事项：Service Worker 缓存穿透与失效排查
+- **必须更新缓存版本**：修改代码或数据后，务必递增 `sw.js` 中的 `CACHE_NAME` 版本号，**否则更改可能不会生效**。
+- **排错第一思考**：如果出现了**“明明修改了代码，但在浏览器里反复刷新也毫无变化、怎么修改都不起作用”**的现象，**请务必首先思考是否是 Service Worker 缓存导致的可能性！**
+- **调试推荐操作**：
+  1. 按 `F12` 打开浏览器开发者工具，在 **Network（网络）** 标签页勾选 **`Disable cache (停用缓存)`**（只要 DevTools 保持打开，所有请求均直达最新文件）；
+  2. 在 **Application（应用）-> Service Workers** 面板中勾选 **`Update on reload`**，或在调试期间直接点击 **`Unregister`** 注销 Service Worker；
+  3. 执行硬性强制刷新：`Ctrl + F5`（Windows）或 `Cmd + Shift + R`（Mac）；
+  4. 亦可在页面右上角「偏好设置」面板中点击「清除本地缓存并刷新」。
