@@ -391,10 +391,30 @@
 
             .port-banner-actions {
                 width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
             }
 
             .port-banner-actions .btn {
-                flex: 1;
+                flex: 1 1 auto;
+                min-width: max-content;
+                padding: 0 14px !important;
+                height: 36px;
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .port-banner-actions .btn span {
+                display: inline !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .port-banner-actions .btn {
+                flex: 1 1 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -554,6 +574,26 @@
                         <li><strong>完备文档与指引</strong>：提供移植手册与贡献指南，支持零基础 AI 辅助制图</li>
                     </ul>
                 </div>
+
+                <div class="feature-card" style="border-color: var(--primary-color);">
+                    <div class="feature-card-header">
+                        <div class="feature-emblem" style="background: var(--primary-color); color: #fff;">
+                            <span style="font-size: 18px;">🍺</span>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex: 1;">
+                            <h3 class="feature-title">Drunk 智能转换系统</h3>
+                            <span class="badge badge-warning" style="font-size: 11px;">测试版</span>
+                        </div>
+                    </div>
+                    <ul class="feature-list">
+                        <li><strong>底图与工程直通</strong>：支持位图图片、矢量 PDF 及 Illustrator (.ai) 工程</li>
+                        <li><strong>AI 视觉拓扑解析</strong>：浏览器直连 DeepSeek 官方多模态视觉大模型</li>
+                        <li><strong>知识库动态对齐</strong>：联网维基百科动态校对站名并补齐中英双语</li>
+                        <li><strong>可视化排版微调</strong>：8 方向文字轮盘避让、幽灵底图比对与 45°/90° 正交吸附</li>
+                        <li><strong>标准工程代码导出</strong>：内置 5 项数据完整性铁律自检，一键生成全套城市代码</li>
+                        <li><strong>早期测试与共建说明</strong>：<strong>Drunk 系统为早期开发验证阶段，仅供测试使用。极其欢迎开发者共同开发！</strong></li>
+                    </ul>
+                </div>
             </div>
 
             <!-- 呼吁共建横幅 -->
@@ -564,23 +604,27 @@
                     </div>
                     <div class="port-banner-info">
                         <h3>想要为你所在的城市制作一份线路图并认领城市主理人？</h3>
-                        <p>无论你是零基础新手想让 AI 辅助编写数据，还是前端开发者自行移植，我们都为你准备了详尽实操指南：</p>
+                        <p>支持使用 Drunk 智能转换系统自动提取线路图，或根据移植指南手动编写数据。Drunk 系统当前为早期测试验证阶段，欢迎体验与共同开发：</p>
                     </div>
                 </div>
                 <div class="port-banner-actions">
-                    <a href="./CONTRIBUTING.md" target="_blank" class="btn btn-primary">
-                        <cgo-icon name="user" size="15"></cgo-icon>
-                        <span>社区贡献与主理人指南</span>
+                    <a href="./drunk/index.html" target="_blank" class="btn btn-primary" title="进入 Drunk 线路图智能转换工作台">
+                        <span>🍺 Drunk 智能转换 (测试版)</span>
                         <cgo-icon name="chevron-right" size="13"></cgo-icon>
                     </a>
-                    <a href="./QUICKSTART.md" target="_blank" class="btn btn-secondary">
-                        <cgo-icon name="code" size="15"></cgo-icon>
-                        <span>新手快速上手手册</span>
+                    <a href="./CONTRIBUTING.md" target="_blank" class="btn btn-info">
+                        <cgo-icon name="user" size="15"></cgo-icon>
+                        <span>城市主理人指南</span>
                         <cgo-icon name="chevron-right" size="13"></cgo-icon>
                     </a>
                     <a href="./PORTING.md" target="_blank" class="btn btn-info">
                         <cgo-icon name="file" size="15"></cgo-icon>
-                        <span>城市移植实操手册</span>
+                        <span>城市移植手册</span>
+                        <cgo-icon name="chevron-right" size="13"></cgo-icon>
+                    </a>
+                    <a href="./QUICKSTART.md" target="_blank" class="btn btn-secondary">
+                        <cgo-icon name="code" size="15"></cgo-icon>
+                        <span>新手实战手册</span>
                         <cgo-icon name="chevron-right" size="13"></cgo-icon>
                     </a>
                 </div>
@@ -590,7 +634,7 @@
             <div class="meta-info-box">
                 <div class="meta-info-text">
                     <p><strong>CGo OpenMap - 城市轨道交通线路图开放平台</strong></p>
-                    <p>由 Central Go 及其贡献者开源维护 · 基础范例版本基于北京、沈阳线网构建</p>
+                    <p>由 Central Go 及其贡献者开源维护 · 基础范例版本基于北京、沈阳线网构建 · Drunk 系统处于早期测试阶段</p>
                 </div>
                 <div class="meta-badges">
                     <span class="badge badge-info">GNU AGPLv3 / ODbL</span>
@@ -605,6 +649,8 @@
     <footer class="portal-footer">
         <div class="footer-nav">
             <a href="./index.html">城市主页</a>
+            <span class="footer-sep">·</span>
+            <a href="./drunk/index.html">Drunk 转换工作台</a>
             <span class="footer-sep">·</span>
             <a href="./QUICKSTART.md" target="_blank">新手指南</a>
             <span class="footer-sep">·</span>

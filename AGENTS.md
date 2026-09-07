@@ -59,6 +59,18 @@ openmap/
 ├── privacy.html                # 隐私政策页面
 ├── manifest.json               # PWA 配置文件
 ├── sw.js                       # Service Worker 离线缓存
+├── drunk/                      # Drunk 线路图智能转换系统 (早期测试版，仅供测试使用)
+│   ├── index.html              # Drunk 沉浸式暗色转换工作台页面
+│   ├── css/drunk.css           # 工作台专属样式
+│   └── js/                     # 转换管道与识别算法
+│       ├── drunk_pipeline.js   # 交互流程调度总线 (上传/渲染/编辑/导出)
+│       ├── deepseek_vision.js  # DeepSeek 视觉大模型识图引擎 (客户端直连)
+│       ├── pdf_vector_extractor.js # PDF & AI 矢量图层与 XMP 色板直通解析
+│       ├── city_knowledge_matcher.js # 维基百科知识库动态匹配与 Levenshtein 纠错
+│       ├── ocr_align_solver.js # 智能 OCR 与 8 方向文字排版求解器
+│       ├── topology_tracer.js  # 线网拓扑追踪 (分支/环线/换乘)
+│       ├── openmap_codegen.js  # 标准代码生成器与 5 项核心铁律自检
+│       └── drunk_logger.js     # 控制台诊断追踪日志
 ├── core/                       # 核心渲染与交互引擎 (多城市通用)
 │   ├── script.js               # 主引擎：SVG生成、视口矩阵变换、平滑飞跃定位、事件监听
 │   ├── cgo-ui.js               # Web Components 组件库 (<cgo-icon> 等)
@@ -189,9 +201,43 @@ const linesData = [
 
 ---
 
-## 5. AI Agent 常见任务执行 SOP
+## 5. Drunk 转换系统与 Agent 协作指南 (实验特性)
+
+> [!WARNING]
+> **早期开发验证阶段声明**：  
+> **Drunk 转换系统（`drunk/`）目前处于早期开发验证阶段，仅供测试与实验使用**。系统算法与数据结构仍在频繁迭代中，导出结果请以实际运行渲染测试为准。**极其欢迎开发者与社区团队共同参与其识别算法、矢量图层直通及拓扑求解器的协同开发！**
+
+Drunk（`drunk/index.html`）是专为解决“新城市手工测量 `(x, y)` 坐标繁琐且易出错”而研发的自动化转换工作台。
+
+### 5.1 核心架构与模块分工
+- `drunk/js/pdf_vector_extractor.js`：基于 Mozilla PDF.js 原生解析 PDF/AI 图层，直通读取矢量路径、OCG 图层语义及 XMP 色板（CMYK/RGB 专色转 Hex），支持多行文字自适应聚类。
+- `drunk/js/deepseek_vision.js`：客户端直连 DeepSeek 官方视觉大模型（`deepseek-v4-flash-vision-exp`），零中间服务器，用于整网位图拓扑结构解析。
+- `drunk/js/city_knowledge_matcher.js`：动态拉取维基百科分类树（MediaWiki API），结合 Levenshtein 模糊编辑距离自动补全站名与中英双语对齐。
+- `drunk/js/ocr_align_solver.js`：计算站名与站点的空间相对方位，自动分配 8 方向避让锚点。
+- `drunk/js/openmap_codegen.js`：生成标准 OpenMap 格式代码，并强制执行 5 项完整性自检。
+
+### 5.2 代码生成 5 项铁律校验（由 `openmap_codegen.js` 自动检验）
+1. **站间距长度自检**：单线必须满足 `distances.length === stationIds.length - 1`；环线必须满足 `distances.length === stationIds.length`。
+2. **车站 ID 引用自检**：`linesData` 中引用的所有 `stationId` 必须在 `stationsData` 中有定义。
+3. **换乘站物理对齐自检**：共站换乘的车站物理坐标必须严格统一。
+4. **孤立车站告警**：未被任何线路引用的车站将提示警告。
+5. **矢量徽标与颜色校验**：`color` 必须符合合法 Hex 格式，引用的 `svg` 需对应 `assets/svg/` 中的模板。
+
+---
+
+## 6. AI Agent 常见任务执行 SOP
 
 ### 任务 A：为项目移植新城市
+根据用户情况选择以下两种路径之一：
+
+#### 路径一：借助 Drunk 工作台快速提取并由 Agent 后期整合（推荐，测试阶段）
+1. 引导用户启动本地静态服务并访问 `http://localhost:8080/drunk/`；
+2. 上传该城市的高清线路图图片、PDF 或 Adobe Illustrator (.ai) 文件；
+3. 执行“视觉识图”或矢量解析，利用 8 方向轮盘排版并执行“45°/90°吸附”；
+4. 点击“导出城市工程”，将代码交付给 Agent 或直接放置于 `city/{city_id}/` 下；
+5. Agent 协助检查 `city/data.js` 注册表与 `sw.js` 缓存版本更新。
+
+#### 路径二：纯手工编写与数据排版
 1. **创建城市目录**：在 `city/` 下新建 `city/{city_id}/`，参考 `city/beijing/` 或 `city/shenyang/` 准备各个 `data_*.js` 文件。
 2. **注册城市**：在 `city/data.js` 的 `CITY_REGISTRY` 中添加新城市元数据。
 3. **编写车站与线路**：按顺序填充 `data_stations.js` 和 `data_lines.js`。
@@ -217,7 +263,7 @@ const linesData = [
 
 ---
 
-## 6. 本地运行与调试方法
+## 7. 本地运行与调试方法
 
 由于浏览器安全策略（CORS）限制，直接双击 `index.html` 或 `main.html` 无法通过 `file://` 协议加载模块与数据。请使用以下任一方式启动本地静态服务：
 

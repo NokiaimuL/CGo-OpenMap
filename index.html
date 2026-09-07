@@ -27,7 +27,8 @@
 
     <style>
         /* Web Components 未注册前的优雅占位，杜绝无样式闪烁 */
-        cgo-icon:not(:defined), cgo-theme-toggle:not(:defined) {
+        cgo-icon:not(:defined),
+        cgo-theme-toggle:not(:defined) {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -380,16 +381,29 @@
             border-top: 1px dashed var(--border-color);
             padding-top: 14px;
             display: flex;
-            justify-content: flex-end;
+            width: 100%;
         }
 
         .btn-enter {
             width: 100%;
-            display: flex;
+            height: 38px;
+            padding: 0 16px !important;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
             transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        /* 强制确保卡片与横幅按钮文字始终可见，禁止隐藏文字标签 */
+        .btn-enter span,
+        .card-action .btn span,
+        .port-banner-actions .btn span {
+            display: inline !important;
         }
 
         .enter-arrow {
@@ -454,7 +468,19 @@
             flex-wrap: wrap;
         }
 
-        /* 响应式适配 */
+        .port-banner-actions .btn {
+            height: 36px;
+            padding: 0 16px !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            white-space: nowrap;
+            flex: 0 0 auto;
+        }
+
+        /* 响应式适配：允许折行，严禁隐藏文字标签 */
         @media (max-width: 768px) {
             .portal-content {
                 padding: 20px 16px 40px;
@@ -473,14 +499,35 @@
 
             .port-banner-actions {
                 width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
             }
 
             .port-banner-actions .btn {
-                flex: 1;
+                flex: 1 1 auto;
+                min-width: max-content;
+                padding: 0 14px !important;
+                height: 36px;
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .port-banner-actions .btn span,
+            .btn-enter span {
+                display: inline !important;
             }
 
             .header-sub-badge {
                 display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .port-banner-actions .btn {
+                flex: 1 1 100%;
+                justify-content: center;
             }
         }
 
@@ -579,16 +626,20 @@
                     </div>
                     <div class="port-banner-info">
                         <h3>为你的城市认领或制作专属线路图</h3>
-                        <p>按照标准规范准备车站坐标与线路配置，无需开发基础，最快 1 小时即可完成新城市上线与独立部署。</p>
+                        <p>可使用 Drunk 智能转换系统从图片/PDF中极速提取线路拓扑（早期测试阶段，仅供测试使用，欢迎共同开发），最快 1 小时即可完成新城市上线与独立部署。</p>
                     </div>
                 </div>
                 <div class="port-banner-actions">
-                    <a href="./PORTING.md" target="_blank" class="btn btn-secondary">
+                    <a href="./drunk/index.html" target="_blank" class="btn btn-primary" title="进入 Drunk 线路图智能转换工作台">
+                        <span>🍺 Drunk 智能转换 (测试版)</span>
+                        <cgo-icon name="chevron-right" size="13"></cgo-icon>
+                    </a>
+                    <a href="./PORTING.md" target="_blank" class="btn btn-info">
                         <cgo-icon name="file" size="15"></cgo-icon>
                         <span>移植实操指南</span>
                         <cgo-icon name="chevron-right" size="13"></cgo-icon>
                     </a>
-                    <a href="./CONTRIBUTING.md" target="_blank" class="btn btn-primary">
+                    <a href="./CONTRIBUTING.md" target="_blank" class="btn btn-info">
                         <cgo-icon name="user" size="15"></cgo-icon>
                         <span>城市主理人计划</span>
                         <cgo-icon name="chevron-right" size="13"></cgo-icon>
@@ -602,6 +653,8 @@
     <footer class="portal-footer">
         <div class="footer-nav">
             <a href="./readme.html">关于平台</a>
+            <span class="footer-sep">·</span>
+            <a href="./drunk/index.html">Drunk 转换工作台</a>
             <span class="footer-sep">·</span>
             <a href="./QUICKSTART.md" target="_blank">新手指南</a>
             <span class="footer-sep">·</span>
