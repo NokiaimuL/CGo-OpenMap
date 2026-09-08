@@ -28,6 +28,17 @@ const originalDesc = document.querySelector('meta[name="description"]')?.getAttr
 window.STATION_HISTORY = [];
 
 /**
+ * 从 GLOBAL_SCHEDULE_DATA 条目取出可点击的官网 URL。
+ * 兼容字符串外链，以及带 url 字段的官方首末班结构对象。
+ */
+function resolveScheduleHref(entry) {
+    if (!entry) return null;
+    if (typeof entry === 'string') return entry;
+    if (typeof entry === 'object' && typeof entry.url === 'string' && entry.url) return entry.url;
+    return null;
+}
+
+/**
  * 重建常驻侧边栏中的历史车站折叠面板列表
  */
 function rebuildSidebarHistory() {
@@ -1668,15 +1679,21 @@ function renderUserModePanel(station, initialTabIndex = 0) {
         if (typeof GLOBAL_SCHEDULE_DATA === 'undefined' || !GLOBAL_SCHEDULE_DATA) return null;
         const lineData = GLOBAL_SCHEDULE_DATA[lineId];
         if (!lineData) return null;
-        return lineData[stationId];
+        return resolveScheduleHref(lineData[stationId]);
     };
-    const getInfoStr = (sid, dist) => {
+    const getInfoStr = (sid, dist, fromSid) => {
         const sName = processedStations[sid]?.cn || "未知";
         const strDist = (dist === undefined || dist === null) ? "" : String(dist).trim();
-        if (!strDist || strDist === "0" || strDist === "?" || strDist === "??") {
-            return sName;
+        if (strDist && strDist !== "0" && strDist !== "?" && strDist !== "??") {
+            return `${sName} <span style="color:var(--text-light);font-size:10px;">(${strDist}米)</span>`;
         }
-        return `${sName} <span style="color:var(--text-light);font-size:10px;">(${strDist}米)</span>`;
+        if (fromSid) {
+            const estimated = estimateSchematicMeters(fromSid, sid);
+            if (estimated != null) {
+                return `${sName} <span style="color:var(--text-light);font-size:10px;">(约${estimated}米)</span>`;
+            }
+        }
+        return sName;
     };
     linesData.forEach(line => {
         let isStationOnLine = false;
@@ -1730,15 +1747,15 @@ function renderUserModePanel(station, initialTabIndex = 0) {
                 const ids1 = line['stationIds-way1'] || [];
                 let idx = ids1.indexOf(station.id);
                 if (idx !== -1) {
-                    if (idx > 0) prevInfo = getInfoStr(ids1[idx - 1], dists1[idx - 1]);
-                    if (idx < ids1.length - 1) nextInfo = getInfoStr(ids1[idx + 1], dists1[idx]);
+                    if (idx > 0) prevInfo = getInfoStr(ids1[idx - 1], dists1[idx - 1], station.id);
+                    if (idx < ids1.length - 1) nextInfo = getInfoStr(ids1[idx + 1], dists1[idx], station.id);
                 } else {
                     const dists2 = line['distances-way2'] || [];
                     const ids2 = line['stationIds-way2'] || [];
                     idx = ids2.indexOf(station.id);
                     if (idx !== -1) {
-                        if (idx > 0) prevInfo = getInfoStr(ids2[idx - 1], dists2[idx - 1]);
-                        if (idx < ids2.length - 1) nextInfo = getInfoStr(ids2[idx + 1], dists2[idx]);
+                        if (idx > 0) prevInfo = getInfoStr(ids2[idx - 1], dists2[idx - 1], station.id);
+                        if (idx < ids2.length - 1) nextInfo = getInfoStr(ids2[idx + 1], dists2[idx], station.id);
                     }
                 }
             } else {
@@ -1754,16 +1771,16 @@ function renderUserModePanel(station, initialTabIndex = 0) {
                         const prevDistVal = (distsReverse && distsReverse[prevIdx] !== undefined)
                             ? distsReverse[prevIdx] : dists[prevIdx];
                         const nextDistVal = dists[idx];
-                        prevInfo = getInfoStr(ids[prevIdx], prevDistVal);
-                        nextInfo = getInfoStr(ids[nextIdx], nextDistVal);
+                        prevInfo = getInfoStr(ids[prevIdx], prevDistVal, station.id);
+                        nextInfo = getInfoStr(ids[nextIdx], nextDistVal, station.id);
                     } else {
                         if (idx > 0) {
                             const prevDistVal = (distsReverse && distsReverse[idx - 1] !== undefined)
                                 ? distsReverse[idx - 1] : dists[idx - 1];
-                            prevInfo = getInfoStr(ids[idx - 1], prevDistVal);
+                            prevInfo = getInfoStr(ids[idx - 1], prevDistVal, station.id);
                         }
                         if (idx < len - 1) {
-                            nextInfo = getInfoStr(ids[idx + 1], dists[idx]);
+                            nextInfo = getInfoStr(ids[idx + 1], dists[idx], station.id);
                         }
                     }
                 }
@@ -2336,6 +2353,7 @@ async function initGeoSystem() {
         });
         Object.assign(STATION_GEO_MAP, GEO_PATCH);
         isGeoLoaded = true;
+        schematicMetersPerPixelCache = undefined;
         console.log(`LBS: Loaded ${Object.keys(STATION_GEO_MAP).length} geo points.`);
     } catch (e) {
         console.warn(`LBS: Failed to load ${geoDataUrl}. Nearest station feature disabled.`);
@@ -2462,9 +2480,71 @@ function outOfChina(lon, lat) {
     return false;
 }
 
+let schematicMetersPerPixelCache = undefined;
+
+function lookupStationLngLat(cn) {
+    if (!cn || !STATION_GEO_MAP) return null;
+    return STATION_GEO_MAP[cn] || STATION_GEO_MAP[cn + "站"] || STATION_GEO_MAP[String(cn).replace(/站$/, "")] || null;
+}
+
 /**
- * 根据大圆航线 Haversine 公式计算两个经纬度坐标之间的球面距离 (单位: 米)
+ * 示意图像素 → 米的比例。优先用城市配置 schematicMetersPerPixel；
+ * 否则用已加载的高德点对「球面距离 / 示意图站距」取中位数标定。
  */
+function getSchematicMetersPerPixel() {
+    if (schematicMetersPerPixelCache !== undefined) return schematicMetersPerPixelCache;
+    const city = typeof getActiveCity === "function" ? getActiveCity() : null;
+    const configured = Number(city && city.schematicMetersPerPixel);
+    if (Number.isFinite(configured) && configured > 0) {
+        schematicMetersPerPixelCache = configured;
+        return configured;
+    }
+    const ratios = [];
+    if (typeof linesData !== "undefined" && linesData && processedStations) {
+        const waysOf = (line) => {
+            if (line.hasbranch) return [line["stationIds-way1"], line["stationIds-way2"]];
+            return [line.stationIds];
+        };
+        linesData.forEach((line) => {
+            waysOf(line).forEach((ids) => {
+                if (!ids) return;
+                for (let i = 0; i < ids.length - 1; i++) {
+                    const a = processedStations[ids[i]];
+                    const b = processedStations[ids[i + 1]];
+                    if (!a || !b) continue;
+                    const px = Math.hypot(a.x - b.x, a.y - b.y);
+                    if (px < 1) continue;
+                    const geoA = lookupStationLngLat(a.cn);
+                    const geoB = lookupStationLngLat(b.cn);
+                    if (!geoA || !geoB) continue;
+                    const meters = getDistance(geoA[1], geoA[0], geoB[1], geoB[0]);
+                    if (meters > 80) ratios.push(meters / px);
+                }
+            });
+        });
+    }
+    if (!ratios.length) {
+        schematicMetersPerPixelCache = null;
+        return null;
+    }
+    ratios.sort((a, b) => a - b);
+    schematicMetersPerPixelCache = ratios[Math.floor(ratios.length / 2)];
+    return schematicMetersPerPixelCache;
+}
+
+/** 无官方 distances 时，用两站示意图 (x,y) 折算估算米数（取整到 10 米）。 */
+function estimateSchematicMeters(fromId, toId) {
+    const a = processedStations[fromId];
+    const b = processedStations[toId];
+    if (!a || !b) return null;
+    const px = Math.hypot(a.x - b.x, a.y - b.y);
+    if (px < 1) return null;
+    const mpp = getSchematicMetersPerPixel();
+    if (!mpp) return null;
+    return Math.max(10, Math.round((px * mpp) / 10) * 10);
+}
+
+/** 根据大圆航线 Haversine 公式计算两个经纬度坐标之间的球面距离 (单位: 米) */
 function getDistance(lat1, lng1, lat2, lng2) {
     const radLat1 = lat1 * Math.PI / 180.0;
     const radLat2 = lat2 * Math.PI / 180.0;
@@ -2771,8 +2851,8 @@ function initContextMenu() {
             if (station.relatedLines && typeof GLOBAL_SCHEDULE_DATA !== 'undefined' && GLOBAL_SCHEDULE_DATA) {
                 for (const lid of station.relatedLines) {
                     if (GLOBAL_SCHEDULE_DATA[lid] && GLOBAL_SCHEDULE_DATA[lid][station.id]) {
-                        staScheduleUrl = GLOBAL_SCHEDULE_DATA[lid][station.id];
-                        break;
+                        staScheduleUrl = resolveScheduleHref(GLOBAL_SCHEDULE_DATA[lid][station.id]);
+                        if (staScheduleUrl) break;
                     }
                 }
             }
