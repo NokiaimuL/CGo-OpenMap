@@ -1822,146 +1822,53 @@ function renderUserModePanel(station, initialTabIndex = 0) {
     let tabsNavHtml = '<div class="panel-tabs-nav">';
     let tabsContentHtml = '<div class="panel-tabs-body">';
     const displayLines = relatedLinesInfo.filter(info => !info.isPointOnly || info.id === 'Rwy');
-    let tabIndex = 0;
-    displayLines.forEach((info) => {
-        const isActive = tabIndex === 0 ? 'active' : '';
-        const lineColorStyle = info.lineColor ? `style="--line-color: ${info.lineColor}"` : '';
+    const infoPanel = document.getElementById('info-panel');
+    if (!infoPanel) return;
 
-        tabsNavHtml += `
-            <div class="tab-item ${isActive}" data-tab-index="${tabIndex}" ${lineColorStyle}>
-                ${info.name}
-            </div>
-        `;
-        let cardAreaHtml = !isCrossPlatformDisplay ? getStaCardAreaHtml(info, false) : '';
-        let stopsHtml = '';
-        const shouldHideNone = isMergeStation || info.isRwy;
-        if (info.prev) {
-            if (!(shouldHideNone && info.prev === "无")) {
-                stopsHtml += createRow("上一站", info.prev);
-            }
+    // 构建模块化渲染上下文
+    const context = {
+        station,
+        initialTabIndex,
+        city,
+        CROSS_PLATFORM_STATIONS,
+        MERGE_STATIONS,
+        isMergeStation,
+        isSuburbanStation,
+        isRwyStation,
+        isNoStation,
+        isTsfMode,
+        isCrossPlatformDisplay,
+        relatedLinesInfo,
+        companyList,
+        displayLines,
+        helpers: {
+            findScheduleUrl,
+            getInfoStr,
+            generateTransferHtml,
+            updateStationSectionTitle,
+            handleShare,
+            updateShareMeta,
+            resetMapState,
+            toggleMobilePanelSize,
+            updateExpandIcon,
+            renderStationCardsInPanel,
+            selectStation,
+            injectInlineSvgs,
+            initPanelDrag,
+            adjustPanelPosition
         }
-        if (info.next) {
-            if (!(shouldHideNone && info.next === "无")) {
-                stopsHtml += createRow(info.nextLabel || "下一站", info.next);
-            }
-        }
-        if (isSuburbanStation) {
-            stopsHtml += `<div style="font-size:10px; color:var(--text-light); margin-bottom:10px; font-weight:bold;">乘坐市郊铁路请参考线路的列车时刻表出行</div>`;
-        }
-        tabsContentHtml += `
-            <div class="tab-pane ${isActive}" data-tab-index="${tabIndex}">
-                ${cardAreaHtml}
-                ${stopsHtml}
-                ${transferHtml}
-            </div>
-        `;
-        tabIndex++;
-    });
-    const isInfoActive = tabIndex === 0 ? 'active' : '';
-    const infoTabIndex = 'station-info';
-    let opInfoHtml = '';
-    relatedLinesInfo.forEach(info => {
-        const styleStr = info.svgclr ? `height:28px; width:auto; vertical-align:middle; margin-right:10px; margin-top:3px; --svgclr:${info.svgclr}; --svgtext:${info.svgtext};` : 'height:28px; width:auto; vertical-align:middle; margin-right:10px; margin-top:3px;';
-        const iconHtml = info.svg
-            ? `<span class="svg-icon-placeholder line-badge" data-src="${info.svg}" style="${styleStr}"></span>`
-            : `<span class="text-badge" style="font-size:10px; margin-right:10px; vertical-align:middle;">${info.name}</span>`;
+    };
 
-        opInfoHtml += `
-            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; padding-left:10px;">
-                ${iconHtml}
-                <span style="font-size:13px; color:var(--text-main); font-weight:bold; text-align:right;">${info.company}</span>
-            </div>
-        `;
-    });
-    tabsNavHtml += `
-        <div class="tab-item ${isInfoActive}" data-tab-index="${infoTabIndex}" style="--line-color: var(--text-light)">
-            车站信息
-        </div>
-    `;
-    tabsContentHtml += `
-        <div class="tab-pane ${isInfoActive}" data-tab-index="${infoTabIndex}">
-            <div class="info-row" style="margin-bottom:15px; border-bottom:1px dashed var(--divider); padding-bottom:10px; font-size: 13px;">
-                <span class="info-label">车站类型</span>
-                <span class="info-value">${stationTypeStr}</span>
-            </div>
-            <div style="margin-bottom:5px; font-size: 13px;">
-                <div class="info-label" style="margin-bottom:8px;">运营单位</div>
-                ${opInfoHtml}
-            </div></div>
-    `;
-    tabsNavHtml += '</div>';
-    tabsContentHtml += '</div>';
-    if (displayLines.length === 0) {
-        tabsNavHtml = '';
-        tabsContentHtml = '<div style="padding:20px;text-align:center;color:#999;">暂无详细运营信息</div>';
+    // 优先调用 StationBoard 模块化渲染引擎
+    if (window.StationBoard && typeof window.StationBoard.render === 'function') {
+        window.StationBoard.render(infoPanel, context);
+        return;
     }
 
-    let footerContent = '';
-    const baseBtnStyle = 'border-radius:6px; text-decoration:none; display:flex; align-items:center; justify-content:center; font-weight:bold; border:none; cursor:pointer; white-space:nowrap; box-shadow:0 2px 5px rgba(0,0,0,0.1); flex:1;';
-    const btnDark = `padding:12px 0; background:var(--primary-color); color:var(--btn-text); font-size:14px; ${baseBtnStyle}`;
-    const btnDarkTiny = `padding:8px 0; background:var(--primary-color); color:var(--btn-text); font-size:11px; ${baseBtnStyle}`;
-    const btnWhite = `padding:12px 0; background:var(--btn-info-bg); color:var(--text-main); border:1px solid var(--border-color); font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.05); ${baseBtnStyle}`;
-    const btnWhiteTiny = `padding:8px 0; background:var(--btn-info-bg); color:var(--text-main); border:1px solid var(--border-color); font-size:11px; box-shadow:0 2px 5px rgba(0,0,0,0.05); ${baseBtnStyle}`;
-    const isSuburbanOrRail = isSuburbanStation || isRwyStation;
-    const mapUrl = city.getNavigationUrl ? city.getNavigationUrl(station.cn, isSuburbanOrRail) : `https://uri.amap.com/search?keyword=${encodeURIComponent(station.cn)}`;
-    const url12306 = city.getRailway12306Url ? city.getRailway12306Url(station.cn) : `https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=${encodeURIComponent(station.cn.replace(/站$/, ''))}`;
-    const isRwy2Station = station.relatedLines && station.relatedLines.includes('Rwy2');
-    const initialLineScheduleUrl = (displayLines[initialTabIndex] && displayLines[initialTabIndex].scheduleUrl)
-        || (displayLines[0] && displayLines[0].scheduleUrl)
-        || displayLines.find(l => l.scheduleUrl)?.scheduleUrl
-        || null;
-
-    if (isNoStation) {
-        footerContent = '<div style="padding:10px; color:#999;">该车站目前尚未运营</div>';
-    } else if (isRwyStation) {
-        const gapSize = '12px';
-        const btnsHtml = `
-            <a href="${url12306}" target="_blank" style="${btnDark}">12306查询</a>
-            <a href="${mapUrl}" target="_blank" onclick="resetMapState()" style="${btnWhite}">高德导航</a>
-        `;
-        footerContent = `<div style="display:flex; gap:${gapSize};">${btnsHtml}</div>`;
-    } else if (isSuburbanStation) {
-        const gapSize = '4px';
-        const suburbanLinks = (typeof city.getSuburbanLinks === 'function') ? city.getSuburbanLinks() : null;
-        let subLinksHtml = '';
-        if (suburbanLinks) {
-            if (suburbanLinks.timetableUrl) subLinksHtml += `<a href="${suburbanLinks.timetableUrl}" target="_blank" style="${btnDarkTiny}">市郊时刻表</a>`;
-            if (suburbanLinks.ticketUrl) subLinksHtml += `<a href="${suburbanLinks.ticketUrl}" target="_blank" style="${btnDarkTiny}">市郊票务</a>`;
-        }
-        const btnsHtml = `
-            ${subLinksHtml}
-            <a href="${url12306}" target="_blank" style="${btnDarkTiny}">12306查询</a>
-            <a href="${mapUrl}" target="_blank" onclick="resetMapState()" style="${btnWhiteTiny}">高德导航</a>
-        `;
-        footerContent = `<div style="display:flex; gap:${gapSize};">${btnsHtml}</div>`;
-    } else {
-        if (isRwy2Station) {
-            const gapSize = '4px';
-            const scheduleBtnHtml = initialLineScheduleUrl
-                ? `<a href="${initialLineScheduleUrl}" id="footer-schedule-btn" target="_blank" style="${btnDarkTiny}">官网查询</a>`
-                : `<a href="#" id="footer-schedule-btn" target="_blank" style="${btnDarkTiny}; display:none;">官网查询</a>`;
-            const btnsHtml = `
-                ${scheduleBtnHtml}
-                <a href="${url12306}" target="_blank" style="${btnDarkTiny}">12306查询</a>
-                <a href="${mapUrl}" target="_blank" onclick="resetMapState()" style="${btnWhiteTiny}">高德导航</a>
-            `;
-            footerContent = `<div style="display:flex; gap:${gapSize};">${btnsHtml}</div>`;
-        } else {
-            const gapSize = '12px';
-            const scheduleBtnHtml = initialLineScheduleUrl
-                ? `<a href="${initialLineScheduleUrl}" id="footer-schedule-btn" target="_blank" style="${btnDark}">官网查询</a>`
-                : `<a href="#" id="footer-schedule-btn" target="_blank" style="${btnDark}; display:none;">官网查询</a>`;
-            const btnsHtml = `
-                ${scheduleBtnHtml}
-                <a href="${mapUrl}" target="_blank" onclick="resetMapState()" style="${btnWhite}">高德导航</a>
-            `;
-            footerContent = `<div style="display:flex; gap:${gapSize};">${btnsHtml}</div>`;
-        }
-    }
+    // 兜底：若 StationBoard 引擎未就绪，使用内联基础渲染流程
     let enNameDisplay = station.en.replace(/<br>/gi, ' ');
     if (station.cn === '首经贸') enNameDisplay = station.en.replace(/<br>/gi, '<span class="special-br"></span>');
     const headerLeftHtml = `<div class="header-name-group"><div class="panel-cn-name">${station.cn}</div><div class="panel-en-name">${enNameDisplay}</div></div>`;
-    const infoPanel = document.getElementById('info-panel');
     infoPanel.style.height = '';
     const expandBtnHtml = (window.innerWidth <= 640)
         ? `<button class="panel-expand-btn" title="展开/收起">
@@ -2069,13 +1976,11 @@ function renderUserModePanel(station, initialTabIndex = 0) {
         });
     });
     injectInlineSvgs(infoPanel);
-
     initPanelDrag();
 
     if (initialTabIndex > 0) {
         const allTabs = infoPanel.querySelectorAll('.tab-item');
         if (allTabs[initialTabIndex]) {
-            // 使用 click 触发切换逻辑
             allTabs[initialTabIndex].click();
         }
     }

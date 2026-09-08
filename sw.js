@@ -18,7 +18,7 @@
  * ==============================================================================
  */
 
-const CACHE_NAME = 'cgo-openmap-v260907.221200';
+const CACHE_NAME = 'cgo-openmap-v260908.111000';
 const ASSETS_TO_CACHE = [
     // 页面与入口
     './',
@@ -38,6 +38,7 @@ const ASSETS_TO_CACHE = [
     // 核心通用 JS 库
     './core/cgo-ui.js',
     './core/tool-theme.js',
+    './core/station-board.js',
     './core/script.js',
     './core/help.js',
     './core/settings.js',
@@ -46,6 +47,7 @@ const ASSETS_TO_CACHE = [
     // 城市配置与业务数据 (示例：北京)
     './city/data.js',
     './city/beijing/beijing.js',
+    './city/beijing/modules/beijing_cultural.js',
     './city/beijing/stacard/script.js',
     './city/beijing/data_stations.js',
     './city/beijing/data_lines.js',
