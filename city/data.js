@@ -53,6 +53,7 @@
         "shanghai": {
             id: "shanghai",
             name: "上海",
+            themeColor: "#ca2223", // 城市专属主题色：上海地铁经典红 (若未设置则使用系统默认蓝色)
             folder: "./city/shanghai",
             mainLogic: "./city/shanghai/shanghai.js",
             center: { x: 900, y: 650 },
@@ -111,9 +112,10 @@
         currentCityId = storedCity;
     }
 
-    // 动态同步网页标题与元数据
+    // 动态同步网页标题与元数据（仅在线路图核心画布页生效，避免污染门户首页标题）
+    const isMapPage = Boolean(window.location.pathname.includes('main.html') || document.getElementById('map-container'));
     const activeCityMeta = CITY_REGISTRY[currentCityId];
-    if (activeCityMeta) {
+    if (isMapPage && activeCityMeta) {
         if (activeCityMeta.title) document.title = activeCityMeta.title;
         const descEl = document.querySelector('meta[name="description"]');
         if (descEl && activeCityMeta.description) descEl.setAttribute('content', activeCityMeta.description);
@@ -168,6 +170,11 @@
             if (CITY_REGISTRY[cityId]) {
                 currentCityId = cityId;
                 localStorage.setItem('cgo_openmap_city', cityId);
+                // 唤起 CGoUI 主题色同步机制，确保跨城市颜色不互相污染
+                if (window.CGO && typeof window.CGO.syncCityTheme === 'function') {
+                    window.CGO.syncCityTheme();
+                }
+                window.dispatchEvent(new CustomEvent('cgo-city-change', { detail: { cityId } }));
                 return true;
             }
             console.warn(`[CityDataManager] 未找到城市配置: ${cityId}`);
