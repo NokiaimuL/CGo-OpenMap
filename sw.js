@@ -18,7 +18,7 @@
  * ==============================================================================
  */
 
-const CACHE_NAME = 'cgo-openmap-v260908.111000';
+const CACHE_NAME = 'cgo-openmap-v260908.211000';
 const ASSETS_TO_CACHE = [
     // 页面与入口
     './',
@@ -94,11 +94,14 @@ const ASSETS_TO_CACHE = [
 
     // 城市配置与业务数据 (合肥)
     './city/hefei/hefei.js',
+    './city/hefei/modules/hefei_timetable.js',
+    './city/hefei/modules/hefei_cultural.js',
     './city/hefei/stacard/script.js',
     './city/hefei/data_stations.js',
     './city/hefei/data_lines.js',
     './city/hefei/data_virtual_transfers.js',
     './city/hefei/data_scattered.js',
+    './city/hefei/assets/railway.svg',
     './city/hefei/data_notopen.js',
     './city/hefei/data_legend.js',
     './city/hefei/data_timetable.js',

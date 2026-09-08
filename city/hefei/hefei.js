@@ -19,7 +19,7 @@
         LINE_SYNC_GROUPS: [],
         SUBURBAN_LINES: ["HFS1", "S1线"],
         MERGE_STATIONS: [],
-        CROSS_PLATFORM_STATIONS: [],
+        CROSS_PLATFORM_STATIONS: ["0114"], // 合肥南站：1 号线与 5 号线同台换乘
         MAP_12306: {
             "合肥火车站": "合肥",
             "合肥南站": "合肥南",
@@ -73,8 +73,23 @@
         },
         async renderStaCards(infoPanel, station) {
             return await this.stacard.getRenderer()?.renderPanelCards?.(infoPanel, station);
+        },
+        stationBoard: {
+            scripts: [
+                "modules/hefei_timetable.js",
+                "modules/hefei_cultural.js"
+            ],
+            modules: {
+                "hefei-line-timetable": { enabled: true, targetTab: "line-tab", order: 22 },
+                "hefei-cultural-tip": { enabled: true, targetTab: "station-info", order: 15 }
+            }
         }
     };
+
+    if (typeof document !== "undefined" && typeof document.write === "function") {
+        document.write('<scr' + 'ipt src="./city/hefei/modules/hefei_timetable.js?v=260908.150200"><\/scr' + 'ipt>');
+        document.write('<scr' + 'ipt src="./city/hefei/modules/hefei_cultural.js?v=260908.182800"><\/scr' + 'ipt>');
+    }
 
     window.HEFEI_CITY = HefeiCity;
     window.CURRENT_CITY = HefeiCity;
