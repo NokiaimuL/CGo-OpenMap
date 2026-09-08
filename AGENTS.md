@@ -71,8 +71,11 @@ openmap/
 │       ├── topology_tracer.js  # 线网拓扑追踪 (分支/环线/换乘)
 │       ├── openmap_codegen.js  # 标准代码生成器与 5 项核心铁律自检
 │       └── drunk_logger.js     # 控制台诊断追踪日志
+├── docs/                       # 架构设计与二次开发文档
+│   └── STATION_MODULE_GUIDE.md # 车站信息板自定义模块开发与配置指南
 ├── core/                       # 核心渲染与交互引擎 (多城市通用)
 │   ├── script.js               # 主引擎：SVG生成、视口矩阵变换、平滑飞跃定位、事件监听
+│   ├── station-board.js        # 车站信息板调度引擎与内置标准模块注册表
 │   ├── cgo-ui.js               # Web Components 组件库 (<cgo-icon> 等)
 │   ├── settings.js             # 偏好设置面板逻辑 (主题、全屏、清除缓存)
 │   ├── help.js                 # 帮助与关于弹窗逻辑
@@ -81,7 +84,8 @@ openmap/
 ├── city/                       # 城市数据层 (按城市解耦)
 │   ├── data.js                 # 城市注册总线 (CITY_REGISTRY) 与运行时元数据
 │   ├── beijing/                # 示例城市 (北京)
-│   │   ├── beijing.js          # 城市特有业务关系
+│   │   ├── beijing.js          # 城市特有业务关系与模块调度配置
+│   │   ├── modules/            # 城市专属特色模块 (如 beijing_cultural.js)
 │   │   ├── data_stations.js    # 车站坐标、中英文名、对齐方式、类型 (dot/tsf/rdot)
 │   │   ├── data_lines.js       # 线路序列、颜色、站距、分支/环线配置
 │   │   ├── data_legend.js      # 图例分组与分类显示
@@ -199,6 +203,24 @@ const linesData = [
   - `svgclr` (可选): 图标底色（默认同 `color`）
   - `svgtext` (可选): 图标文字颜色（默认 `#FFFFFF`）
 
+### 4.5 可定制模块化车站信息板（`core/station-board.js`）
+
+车站信息板采用**模块注册化架构**，核心调度逻辑与城市业务数据完全解耦。各城市主理人可根据本地城市特点与运营需求，自主开关、重排序或定制扩展以下 7 大核心领域内容：
+
+1. 🏛️ **文旅信息**：车站周边历史名胜古迹、红色旅游景点、网红商圈与地标导览（如北京历史名胜、沈阳方城文脉）。
+2. ⏱️ **运行时刻信息**：首末班车发车时刻、平日/节假日运营时刻表及全天班次分布。
+3. ⏳ **预计进站时间**：列车实时到站倒计时、发车预估及行车间隔动态指示。
+4. 🔄 **换乘详情**：同台换乘指引、立体通道换乘、出站限时虚拟免换乘规则、换乘步行耗时与火车站/航站楼连通提示。
+5. 🚌 **接驳空间**：地面微循环公交线路、出租车/网约车站台、P+R 驻车换乘停车场、共享单车接驳区。
+6. 🏗️ **站台结构**：岛式/侧式站台示意、楼梯/自动扶梯/垂直无障碍电梯分布位置、车厢编号与最佳换乘车门指引。
+7. 🍼 **设施指南**：母婴关爱室、无障碍卫生间、AED 自动体外除颤仪、便民服务台与失物招领处。
+
+#### 模块注册与城市配置规范
+- **注册模块**：在 `city/{city_id}/modules/` 下编写模块脚本，调用 `window.StationBoard.registerModule({ id, name, targetTab, order, shouldRender, render, onMounted })`；
+- **配置与调度**：在 `city/{city_id}/{city_id}.js` 中配置 `stationBoard` 字典统一调度；
+- **同步加载机制**：城市专属模块脚本必须在城市主逻辑 `{city}.js` 中通过 `document.write` 同步引入，确保在核心引擎执行前就绪。
+- 完整开发手册与 API 规范请参阅：[《车站信息板自定义模块开发与配置指南》](docs/STATION_MODULE_GUIDE.md)。
+
 ---
 
 ## 5. Drunk 转换系统与 Agent 协作指南 (实验特性)
@@ -260,6 +282,15 @@ Drunk（`drunk/index.html`）是专为解决“新城市手工测量 `(x, y)` �
        "M1308": ["M1205"]
    };
    ```
+
+### 任务 D：为城市定制/新增车站信息板模块
+1. **明确业务场景与槽位**：根据城市需要，选择定制文旅名胜、运行时刻、预计进站时间、换乘详情、接驳空间、站台结构、便民设施等内容；确定挂载目标（`'line-tab'`、`'station-info'`、`'header'`、`'footer'` 或自定义新 Tab）。
+2. **编写模块脚本**：在 `city/{city_id}/modules/{module_name}.js` 中通过 `window.StationBoard.registerModule({...})` 编写渲染逻辑（返回标准 HTML 字符串）。
+3. **在城市主脚本中同步引入与调度**：
+   - 在 `city/{city_id}/{city_id}.js` 中通过 `document.write('<script src="' + folder + '/modules/{module_name}.js?v=' + v + '"><\/script>');` 同步加载；
+   - 在城市对象的 `stationBoard.modules` 字典中配置模块的 `enabled`、`order` 与 `targetTab`。
+4. **更新离线缓存**：将新模块文件登记至 `sw.js` 的 `ASSETS_TO_CACHE` 中，并递增 `CACHE_NAME` 版本号。
+5. **验证测试**：启动本地服务器，点击对应车站，检查模块内容、事件交互及暗色/浅色模式适配。
 
 ---
 

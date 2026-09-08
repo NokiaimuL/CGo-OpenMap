@@ -52,7 +52,9 @@ CGo OpenMap 采用了**核心渲染引擎与城市业务数据完全解耦**的�
 
 ```text
 city/shanghai/
-├── shanghai.js                 # 城市特有业务逻辑与连通关系定义
+├── shanghai.js                 # 城市特有业务逻辑、连通关系与信息板模块编排
+├── modules/                    # 城市专属定制模块目录 (文旅/设施/接驳/时刻等)
+│   └── cultural_tip.js         # 示例：文旅地标或特色服务模块
 ├── data_stations.js            # 车站列表 (坐标、名称、类型、对齐方式)
 ├── data_lines.js               # 线路列表 (线路颜色、站点序列、站间距、运营单位)
 ├── data_legend.js              # 图例面板展示结构与线路分组
@@ -241,7 +243,81 @@ const VIRTUAL_FREE_TRANSFER_MAP = {
 
 ---
 
-## 🚀 第五步：在 `main.html` 中引入城市数据脚本
+## 🧩 第五步：车站信息板模块配置与自定义扩展（可选）
+
+CGo OpenMap 支持**车站信息板模块注册化**架构（由 `core/station-board.js` 统一调度）。城市主理人无需修改底层核心，即可根据本地城市的特点与实际乘客服务需求，随心定制以下 7 大维度的特色服务模块：
+
+1. 🏛️ **文旅信息定制**：
+   - 提取重点文旅车站周边的历史名胜、红色旅游路线、城市商圈与网红打卡地标；
+   - 示例：北京的天安门东/前门文化小贴士、沈阳的盛京方城文化导览等。
+2. ⏱️ **运行时刻信息**：
+   - 定制各线路各运行方向的首末班车发车时间表、早晚高峰及平峰发车间隔；
+   - 支持多方向班次独立展开与末班车倒计时提醒。
+3. ⏳ **预计进站时间**：
+   - 定制列车实时预计到站时间看板、即将进站提示动效或模拟运营频次预测看板。
+4. 🔄 **换乘详情与走行耗时**：
+   - 展现同台换乘（同向/反向）、地下连通道换乘、出站虚拟限时免费换乘指引；
+   - 标明换乘步行距离与预估耗时（如“换乘通道约 120 米，步行约 2 分钟”）。
+5. 🚌 **接驳空间与微循环交通**：
+   - 汇总各出入口周边的地面常规公交线路、微循环接驳巴士、出租车/网约车即停即走区；
+   - 标注周边 P+R 驻车换乘停车场位置与共享单车集中停靠点。
+6. 🏗️ **站台结构与最佳乘车位置**：
+   - 直观呈现岛式/侧式站台平面示意、楼梯与自动扶梯上下行方向；
+   - 标明垂直无障碍电梯所在车厢位置、列车车厢编号与最佳换乘车门（如“4号车厢2门下车直达换乘通道”）。
+7. 🍼 **设施指南与便民服务**：
+   - 明确标示站内母婴关爱室、无障碍卫生间、AED 自动体外除颤仪、便民轮椅与盲道分布；
+   - 整合便民充电宝、自动售药售货机、行李寄存处与失物招领中心联系方式。
+
+### 调控与开发方式速览：
+
+#### 1. 在 `{city}.js` 中调控内置与自定义模块
+```javascript
+// 在 city/{city_id}/{city_id}.js 中
+stationBoard: {
+    modules: {
+        // 开关或调整内置模块顺序
+        'stacard': { enabled: true, order: 10 },
+        'adjacent-stations': { enabled: true, order: 20 },
+        'transfers': { enabled: true, order: 30 },
+        'operators': { enabled: false }, // 例如关闭运营商显示
+
+        // 启用城市专属自定义模块
+        'my-city-cultural': { enabled: true, targetTab: 'station-info', order: 15 },
+        'platform-guide': { enabled: true, targetTab: 'line-tab', order: 25 }
+    }
+}
+```
+
+#### 2. 在 `city/{city_id}/modules/` 下编写模块逻辑
+```javascript
+// city/{city_id}/modules/cultural.js
+window.StationBoard.registerModule({
+    id: 'my-city-cultural',
+    name: '文旅名胜指引',
+    targetTab: 'station-info',
+    order: 15,
+    shouldRender({ station }) {
+        return Boolean(station.culturalTips);
+    },
+    render({ station }) {
+        return `<div class="station-culture-tip">🏛️ ${station.culturalTips}</div>`;
+    }
+});
+```
+
+#### 3. 在 `{city}.js` 顶部同步加载模块脚本
+```javascript
+// 城市专属模块通过 document.write 同步加载，确保在核心引擎执行前就绪
+if (typeof document !== 'undefined' && document.write) {
+    document.write('<script src="' + folder + '/modules/cultural.js?v=' + v + '"><\/script>');
+}
+```
+
+> 📖 **完整开发规范与更多案例**：请查阅官方完整手册 [《车站信息板自定义模块开发与配置指南》](docs/STATION_MODULE_GUIDE.md)。
+
+---
+
+## 🚀 第六步：在 `main.html` 中引入城市数据脚本
 
 在 `main.html` 的底部脚本加载区，系统已配置动态按需加载，亦可直接通过 `main.html?city={city_id}` 动态访问。若需要硬编码调试，可将相关数据脚本指向你的新城市目录（例如 `shanghai`）：
 
@@ -260,7 +336,7 @@ const VIRTUAL_FREE_TRANSFER_MAP = {
 
 ---
 
-## ⚡ 第六步：更新 Service Worker 离线缓存 (`sw.js`)
+## ⚡ 第七步：更新 Service Worker 离线缓存 (`sw.js`)
 
 > [!IMPORTANT]
 > **🚨 极其关键步骤：务必更新 Service Worker，否则更改可能不会生效！**
