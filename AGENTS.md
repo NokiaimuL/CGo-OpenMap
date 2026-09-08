@@ -124,6 +124,8 @@ const CITY_REGISTRY = {
     "shanghai": {
         id: "shanghai",
         name: "上海",
+        themeColor: "#b72626",          // 城市专属主题色 (Hex，驱动主要按钮、悬浮态与高亮，留空使用默认蓝色)
+        svglogo: '<svg xmlns="http://www.w3.org/2000/svg"><path d="..."/></svg>', // 城市官方矢量徽标 (收录去色去 viewBox，留空默认显示小火车图标)
         folder: "./city/shanghai",
         mainLogic: "./city/shanghai/shanghai.js",
         center: { x: 1000, y: 800 },   // 初始视口居中坐标
@@ -137,6 +139,11 @@ const CITY_REGISTRY = {
     }
 };
 ```
+
+> 💡 **城市品牌定制规范**：
+> - `themeColor`：优先使用 6 位 Hex（如 `#b72626`、`#c60a16`），亦兼容 3/8 位 Hex。未设置时自动继承系统经典深蓝（`#00263b`）。不同城市之间色彩完全隔离，杜绝相互污染。
+> - `svglogo`：收录时**必须去色（移除硬编码 fill）、去 viewBox 并去除 XML 头部**。前端基于 `currentColor` 自动适配亮暗与悬浮反白，并通过 `getBBox()` 自动自适应缩放至与小火车图标一致的 `22px × 22px`。留空则自动降级展示小火车图标。
+
 
 ### 4.2 车站定义 (`data_stations.js`)
 

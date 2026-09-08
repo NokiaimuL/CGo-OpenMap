@@ -84,6 +84,8 @@ const CITY_REGISTRY = {
     "shanghai": {
         id: "shanghai",
         name: "上海",
+        themeColor: "#b72626", // 城市专属主题色：用于页面按钮、高亮与边框（支持 3/6/8 位 Hex，留空则使用默认蓝色）
+        svglogo: '<svg xmlns="http://www.w3.org/2000/svg"><path d="..."/></svg>', // 城市官方矢量徽标：用于首页城市卡片右上角（收录去色去 viewBox，留空默认显示小火车图标）
         folder: "./city/shanghai",
         mainLogic: "./city/shanghai/shanghai.js",
         // 地图初始视图中心点与缩放比例
@@ -97,10 +99,21 @@ const CITY_REGISTRY = {
         title: "CGo OpenMap - 上海轨道交通线路图",
         keywords: "上海地铁, 申通地铁, 线路图, 轨道交通",
         description: "由 CGo OpenMap 驱动的上海轨道交通智能交互线路图",
-        isDefault: true // 设为默认激活
+        isDefault: false
     }
 };
 ```
+
+#### 🎨 城市视觉定制字段规范：
+1. **`themeColor` (城市专属主题色)**：
+   - **核心作用**：定制该城市在线路图画布页（`main.html`）与首页城市卡片（`index.html`）中的专属主色调（自动衍生深浅调色板，驱动主要按钮、悬浮态、边框高亮等，且不同城市间彻底隔离防污染）。
+   - **格式规范**：支持标准 Hex 颜色（推荐 6 位 Hex 如 `#b72626`、`#c60a16`，引擎亦兼容 3 位与 8 位 Hex）。若配置为 `null`、`""` 或留空，系统将自动回退使用全局经典深蓝色（`#00263b`）。
+2. **`svglogo` (城市官方矢量徽标)**：
+   - **核心作用**：在门户首页（`index.html`）的城市卡片右上角展示该城市轨道交通官方矢量 Logo（替换默认的小火车 `train` 图标）。
+   - **格式规范**：
+     - **去色**：去除写死的 `fill` 颜色属性，引擎将自动注入 `currentColor`，使其在浅色模式、深色模式及鼠标悬停卡片反白状态下均保持完美一致；
+     - **去 viewBox**：收录时去除 `viewBox` 与 XML 头部声明（引擎在渲染时通过智能量级初筛与 `getBBox()` 自动自适应充满 `22px × 22px` 视口，无论原始坐标系是 100 还是 1024 均等大保真居中呈现）；
+     - **留空降级**：若未填入或留空（`svglogo: ""`），系统默认显示经典小火车图标。
 
 > [!TIP]
 > **同步配置 PWA 应用快捷直达方式 (`manifest.json`)**：
